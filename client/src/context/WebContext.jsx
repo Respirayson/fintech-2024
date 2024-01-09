@@ -35,7 +35,7 @@ export function WebProvider({ children }) {
       const accounts = await ethereum.request({ method: 'eth_accounts' });
 
       if (accounts.length) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
+        const provider = new ethers.BrowserProvider(ethereum);
         const account = accounts[0];
         const balance = await provider.getBalance(accounts[0]);
         setEthBalance(parseFloat(ethers.utils.formatEther(balance)).toFixed(3));

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.20;
 
 // Importing ERC721 and its extensions from OpenZeppelin
-import "@openzeppelin/contracts@5.0.0/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts@5.0.0/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts@5.0.0/token/ERC721/extensions/ERC721Burnable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 
 /**
  * @title SourceTokenMinter
@@ -93,5 +93,30 @@ contract SourceTokenMinter is ERC721, ERC721Burnable {
         _safeMint(msg.sender, id);
 
         return id;
+    }
+
+    /**
+     * @dev Returns the insurance policy for a given token ID.
+     * @return The insurance policy.
+     */
+    function viewPolicy(uint256 _tokenId)
+        public
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            string memory,
+            uint256
+        )
+    {
+        Insurance memory insurance = insurances[_tokenId];
+        return (
+            insurance.policyNumber,
+            insurance.startDate,
+            insurance.maturityDate,
+            insurance.name,
+            insurance.sumAssured
+        );
     }
 }

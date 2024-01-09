@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.20;
 
 // Importing OpenZeppelin's ERC721 standard contracts
-import "@openzeppelin/contracts@5.0.0/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts@5.0.0/token/ERC721/extensions/ERC721Burnable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 
 /**
  * @title DestinationTokenMinter
