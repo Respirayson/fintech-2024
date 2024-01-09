@@ -1,6 +1,8 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import "./header.css";
 import { Container } from "reactstrap";
+
+import { WebContext } from "../../context/WebContext";
 
 import { NavLink, Link } from "react-router-dom";
 
@@ -23,28 +25,30 @@ const NAV__LINKS = [
   },
 ];
 
-const Header = () => {
+const Header = ({ checkAuthenticated, handleLogout }) => {
   const headerRef = useRef(null);
+
+  const { ethBalance } = useContext(WebContext);
 
   const menuRef = useRef(null);
 
-//   useEffect(() => {
-//     window.addEventListener("scroll", () => {
-//       if (
-//         document.body.scrollTop > 80 ||
-//         document.documentElement.scrollTop > 80
-//       ) {
-//         headerRef.current.classList.add("header__shrink");
-//       } else {
-//         headerRef.current.classList.remove("header__shrink");
-//       }
-//     });
+  //   useEffect(() => {
+  //     window.addEventListener("scroll", () => {
+  //       if (
+  //         document.body.scrollTop > 80 ||
+  //         document.documentElement.scrollTop > 80
+  //       ) {
+  //         headerRef.current.classList.add("header__shrink");
+  //       } else {
+  //         headerRef.current.classList.remove("header__shrink");
+  //       }
+  //     });
 
-//     return () => {
-//       window.removeEventListener("scroll");
-//     };
-//   }, []);
-useEffect(() => {
+  //     return () => {
+  //       window.removeEventListener("scroll");
+  //     };
+  //   }, []);
+  useEffect(() => {
     const handleScroll = () => {
       if (
         document.body.scrollTop > 80 ||
@@ -55,16 +59,15 @@ useEffect(() => {
         headerRef.current.classList.remove("header__shrink");
       }
     };
-  
+
     // Listen for scroll events
     window.addEventListener("scroll", handleScroll);
-  
+
     // Cleanup function
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  
 
   const toggleMenu = () => menuRef.current.classList.toggle("active__menu");
 
@@ -75,7 +78,7 @@ useEffect(() => {
           <div className="logo">
             <h2 className=" d-flex gap-2 align-items-center ">
               <span>
-                <i class="ri-fire-fill"></i>
+                <i className="ri-fire-fill"></i>
               </span>
               NFTs
             </h2>
@@ -101,13 +104,17 @@ useEffect(() => {
           <div className="nav__right d-flex align-items-center gap-5 ">
             <button className="btn d-flex gap-2 align-items-center">
               <span>
-                <i class="ri-wallet-line"></i>
+                <i className="ri-wallet-line"></i>
               </span>
-              <Link to="/wallet">Connect Wallet</Link>
+              {checkAuthenticated() ? (
+                <Link onClick={handleLogout}>{ethBalance} ETH || Sign Out</Link>
+              ) : (
+                <Link to="/wallet">Connect Wallet</Link>
+              )}
             </button>
 
             <span className="mobile__menu">
-              <i class="ri-menu-line" onClick={toggleMenu}></i>
+              <i className="ri-menu-line" onClick={toggleMenu}></i>
             </span>
           </div>
         </div>
