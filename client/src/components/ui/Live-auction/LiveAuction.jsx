@@ -1,13 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 
-import NftCard from "../Nft-card/NftCard";
+import NftCard from "../PolicyCard/PolicyPreview.jsx";
 import { NFT__DATA } from "../../../assets/data/data.js";
 
 import "./live-auction.css";
+import axios from "axios";
+import PolicyCard from "../PolicyCard/PolicyCard.jsx";
 
 const LiveAuction = () => {
+  const [policies, setPolicies] = useState([]);
+
+  useEffect(() => {
+    // Fetch policies when the component mounts
+    const fetchPolicies = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/policy');
+        setPolicies(response.data);
+      } catch (error) {
+        console.error('Error fetching policies:', error);
+      }
+    };
+
+    fetchPolicies();
+  }, []);
+
+  console.log(policies)
+
   return (
     <section>
       <Container>
@@ -21,10 +41,10 @@ const LiveAuction = () => {
             </div>
           </Col>
 
-          {NFT__DATA.slice(0, 4).map((item) => (
-            <Col lg="3" md="4" sm="6" className="mb-4">
-              <NftCard key={item.id} item={item} />
-            </Col>
+          {policies && policies.map((policy) => (
+              <Col lg="3" md="4" sm="6" className="mb-4" key={policy._id}>
+                <PolicyCard key={policy._id} {...policy} />
+              </Col>
           ))}
         </Row>
       </Container>

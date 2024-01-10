@@ -1,7 +1,8 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { ethers } from 'ethers';
+import Swal from 'sweetalert2';
 
-// Create a context for the Web Provider
+// Create a context   for the Web Provider
 export const WebContext = createContext();
 
 const { ethereum } = window;
@@ -14,7 +15,11 @@ const { ethereum } = window;
  */
 export function WebProvider({ children }) {
   const [showAlert, setShowAlert] = useState(false);
+  const [alertIcon, setAlertIcon] = useState(null);
+  const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+  const [isRedirect, setIsRedirect] = useState(false);
+  const [autoredirect, setAutoredirect] = useState('');
   const [success, setSuccess] = useState(false);
 
   const [currentAccount, setCurrentAccount] = useState(null);
@@ -26,7 +31,9 @@ export function WebProvider({ children }) {
   const checkIfWalletIsConnected = async () => {
     try {
       if (!ethereum) {
-        setAlertMessage('Make sure you have metamask!');
+        setAlertIcon('error');
+        setAlertTitle('MetaMask Required');
+        setAlertMessage('Please ensure that you have MetaMask installed!');
         setShowAlert(true);
         setSuccess(false);
         return;
@@ -40,6 +47,7 @@ export function WebProvider({ children }) {
         const balance = await provider.getBalance(accounts[0]);
         setEthBalance(parseFloat(ethers.utils.formatEther(balance)).toFixed(3));
         setCurrentAccount(account);
+        console.log(account)
       } else {
         // No account connected
       }
@@ -57,24 +65,51 @@ export function WebProvider({ children }) {
    * Close the alert after a specified time interval
    */
   useEffect(() => {
-    if (showAlert) {
+     if (showAlert) {
       const timer = setTimeout(() => {
+        setAlertIcon(null);
+        setAlertTitle('');
         setShowAlert(false);
+        Swal.close();
         setAlertMessage('');
         setSuccess(false);
+        if (isRedirect) {
+          setTimeout(() => {
+            window.open(autoredirect, "_blank");
+            setAutoredirect('');
+            setIsRedirect(false);
+          }, 3000)
+        }
       }, 3500);
 
-      return () => clearTimeout(timer);
-    }
-  }, [showAlert]);
+      return () => {
+        Swal.fire({
+          icon: alertIcon,
+          title: alertTitle,
+          html: alertMessage.replace(/\n/g, '<br>'),
+          showConfirmButton: false,
+          timer: 3500
+        })
+        clearTimeout(timer);
+      }
+    } 
+  }, [showAlert, isRedirect, alertIcon, alertTitle, alertMessage, autoredirect]);
 
   return (
     <WebContext.Provider
       value={{
         showAlert,
         setShowAlert,
+        alertIcon,
+        setAlertIcon,
+        alertTitle,
+        setAlertTitle,
         alertMessage,
         setAlertMessage,
+        autoredirect,
+        setAutoredirect,
+        isRedirect,
+        setIsRedirect,
         success,
         setSuccess,
         currentAccount,
