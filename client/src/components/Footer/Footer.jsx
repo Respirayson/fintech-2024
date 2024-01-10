@@ -216,12 +216,10 @@ const Footer = () => {
                 <span>
                   <i class="ri-fire-fill"></i>
                 </span>
-                NFTs
+                W
               </h2>
               <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Voluptate, quod repellat! Quis quos dolorum tenetur fuga?
-                Aspernatur rerum quae amet.
+                Decentralised insurance ecosystem for secure and transparent policy shopping.
               </p>
             </div>
           </Col>
