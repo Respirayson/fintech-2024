@@ -84,7 +84,7 @@ app.post('/policy', async (req, res) => {
     const { publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description } = req.body;
     const newPolicy = new Policy({ publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description });
     await newPolicy.save()
-    res.status(200);
+    res.status(200).json({ message: "Successfully added policy"});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });

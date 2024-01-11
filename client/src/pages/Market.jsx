@@ -48,28 +48,21 @@ const Market = () => {
   }
 
   useEffect(() => {
-    // Sort policies when sortBy changes
-    const sortedPolicies = sortBy === 'no-sort' ? policies : displayedPolicies.sort((a, b) => {
+    const sortedPolicies = sortBy === 'no-sort' ? policies : [...policies].sort((a, b) => {
       if (sortBy === 'start-date') {
         return new Date(a.startDate) - new Date(b.startDate);
       } else if (sortBy === 'maturity-date') {
         return new Date(a.maturityDate) - new Date(b.maturityDate);
-      } else if (sortBy === 'price-desc') {
-        return a.premium - b.premium;
       } else if (sortBy === 'price-asc') {
+        return a.premium - b.premium;
+      } else if (sortBy === 'price-desc') {
         return b.premium - a.premium;
       }
       return 0; // Default case, no sorting
     });
-    setDisplayedPolicies(sortedPolicies);
-  }, [sortBy, displayedPolicies]);
-
-  useEffect(() => {
-    // Sort policies when sortBy changes
-
-    const filteredPolicies = filterBy === 'no-filter' ? policies : displayedPolicies.filter(policy => policy.policyType === filterBy);
+    const filteredPolicies = filterBy === 'no-filter' ? sortedPolicies : [...sortedPolicies].filter(policy => policy.policyType === filterBy);
     setDisplayedPolicies(filteredPolicies);
-  }, [filterBy, displayedPolicies]);
+  }, [sortBy, filterBy, policies]);
 
   return (
     <>
@@ -101,7 +94,7 @@ const Market = () => {
 
                 <div className="filter__right">
                   <select onChange={handleSort}>
-                    <option>Sort By</option>
+                    <option value='no-sort'>Sort By</option>
                     <option value="price-asc">Price (Low To High)</option>
                     <option value="price-desc">Price (High To Low)</option>
                     <option value="start-date">Start Date</option>

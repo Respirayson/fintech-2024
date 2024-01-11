@@ -1,19 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import { Container, Row, Col } from "reactstrap";
 import CommonSection from "../components/ui/Common-section/CommonSection";
 import PolicyPreview from "../components/ui/PolicyCard/PolicyPreview";
-import img from "../assets/images/img-01.jpg";
-import avatar from "../assets/images/ava-01.png";
 import { checkWalletConnected } from '../utils/connect'
 import axios from 'axios';
 
 import "../styles/create-item.css";
 import PolicyForm from "../components/CreatePolicyForm/CreatePolicyForm";
 import { WebContext } from '../context/WebContext';
-
+import { useNavigate } from 'react-router-dom';
 const Create = () => {
+  const navigate = useNavigate();
   const [currentAccount, setCurrentAccount] = useState("");
+  const { 
+    setShowAlert, 
+    setSuccess, 
+    setAlertIcon, 
+    setAlertTitle, 
+    setAlertMessage
+   } = useContext(WebContext);
+
+
   useEffect(() => {
     /**
      * Fetches the connected wallet account on component mount.
@@ -44,31 +52,28 @@ const Create = () => {
       try {
           formData.publicAddress = currentAccount
           const response = await axios.post('http://localhost:8000/policy', formData);
-          console.log('Policy created:', response.data);
-      } catch (error) {
-          console.error('Error creating policy:', error.message);
-      } finally {
-        setFormData({
-          publicAddress: currentAccount,
-          policyName: '',
-          issuerName: '',
-          policyType: '',
-          premium: 0,
-          startDate: '',
-          maturityDate: '',
-          description: '',
-        })
+          setShowAlert(true);
+          setAlertIcon('success');
+          setAlertTitle('Congratulations');
+          setAlertMessage(response.data.message);
+          setTimeout(3500)
+          navigate("/home");
+      } catch (err) {
+        setShowAlert(true);
+        setAlertIcon('error');
+        setAlertTitle('Error');
+        setAlertMessage(err.message);
       }
   };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-          ...formData,
-          [name]: value,
-        });
-        console.log(formData)
-    };
+  const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+      console.log(formData)
+  };
 
 
   return (
