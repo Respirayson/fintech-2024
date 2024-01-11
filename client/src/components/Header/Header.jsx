@@ -109,7 +109,7 @@ const Header = ({ checkAuthenticated, handleLogout }) => {
                   </NavLink>
                 </li>
               ))}
-              {checkAuthenticated() && 
+              {checkAuthenticated && 
                 <li className="nav__item">
                   <NavLink
                     to="/"
@@ -124,7 +124,7 @@ const Header = ({ checkAuthenticated, handleLogout }) => {
           </div>
 
           <div className="nav__right d-flex align-items-center gap-3 ">
-            {checkAuthenticated() ? (
+            {checkAuthenticated ? (
               <div className="row">
                 
                 <div className="col">
