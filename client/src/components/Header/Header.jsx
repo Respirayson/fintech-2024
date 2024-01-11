@@ -112,7 +112,7 @@ const Header = ({ checkAuthenticated, handleLogout }) => {
               {checkAuthenticated() && 
                 <li className="nav__item">
                   <NavLink
-                    to="/"
+                    to="#"
                     className={(navClass) =>
                       navClass.isActive ? "active" : ""
                     }

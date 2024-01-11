@@ -10,18 +10,7 @@ import axios from 'axios';
 
 import "../styles/create-item.css";
 import PolicyForm from "../components/CreatePolicyForm/CreatePolicyForm";
-
-
-const item = {
-  id: "01",
-  title: "Guard",
-  desc: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam adipisci cupiditate officia, nostrum et deleniti vero corrupti facilis minima laborum nesciunt nulla error natus saepe illum quasi ratione suscipit tempore dolores. Recusandae, similique modi voluptates dolore repellat eum earum sint.",
-  imgUrl: img,
-  creator: "Trista Francis",
-  creatorImg: avatar,
-  currentBid: 7.89,
-};
-
+import { WebContext } from '../context/WebContext';
 
 const Create = () => {
   const [currentAccount, setCurrentAccount] = useState("");

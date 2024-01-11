@@ -219,7 +219,7 @@ const Footer = () => {
                 W
               </h2>
               <p>
-                Decentralised insurance ecosystem for secure and transparent policy shopping.
+                Decentralised insurance ecosystem for secure and transparent policy shopping
               </p>
             </div>
           </Col>

@@ -17,7 +17,7 @@ const LiveAuction = () => {
     const fetchPolicies = async () => {
       try {
         const response = await axios.get('http://localhost:8000/policy');
-        setPolicies(response.data);
+        setPolicies(response.data.slice(1,9));
       } catch (error) {
         console.error('Error fetching policies:', error);
       }
