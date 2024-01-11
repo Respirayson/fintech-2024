@@ -23,6 +23,7 @@ export const NFT__DATA = [
     imgUrl: img01,
     creator: "Trista Francis",
     creatorImg: ava01,
+    type: "Car Insurance",
     currentBid: 5.89,
   },
 
@@ -33,6 +34,7 @@ export const NFT__DATA = [
     imgUrl: img02,
     creator: "Trista Francis",
     creatorImg: ava02,
+    type: "Travel Insurance",
     currentBid: 5.09,
   },
 
@@ -43,6 +45,7 @@ export const NFT__DATA = [
     imgUrl: img03,
     creator: "Trista Francis",
     creatorImg: ava03,
+    type: "Health Insurance",
     currentBid: 6.89,
   },
 
@@ -53,6 +56,7 @@ export const NFT__DATA = [
     imgUrl: img04,
     creator: "Trista Francis",
     creatorImg: ava04,
+    type: "Life Insurance",
     currentBid: 7.89,
   },
 
@@ -63,6 +67,7 @@ export const NFT__DATA = [
     imgUrl: img05,
     creator: "Trista Francis",
     creatorImg: ava05,
+    type: "Home Insurance",
     currentBid: 4.89,
   },
 
@@ -73,6 +78,7 @@ export const NFT__DATA = [
     imgUrl: img06,
     creator: "Trista Francis",
     creatorImg: ava06,
+    type: "Disability Insurance",
     currentBid: 4.99,
   },
 
@@ -83,6 +89,7 @@ export const NFT__DATA = [
     imgUrl: img07,
     creator: "Trista Francis",
     creatorImg: ava03,
+    type: "Fire Insurance",
     currentBid: 5.89,
   },
 
@@ -93,6 +100,7 @@ export const NFT__DATA = [
     imgUrl: img08,
     creator: "Trista Francis",
     creatorImg: ava04,
+    type: "Personal Accident Insurance",
     currentBid: 5.89,
   },
 

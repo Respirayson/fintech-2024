@@ -11,35 +11,43 @@ import { connectWallet, checkWalletConnected } from "../utils/connect";
 import "../styles/wallet.css";
 
 const wallet__data = [
-  {
-    title: "Bitcoin",
-    desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium accusamus repellat rerum consequatur explicabo? Reiciendis!",
-    icon: "ri-bit-coin-line",
-  },
+  // {
+  //   title: "Bitcoin",
+  //   desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium accusamus repellat rerum consequatur explicabo? Reiciendis!",
+  //   icon: "ri-bit-coin-line",
+  // },
+
+  // {
+  //   title: "Coinbase",
+  //   desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium accusamus repellat rerum consequatur explicabo? Reiciendis!",
+  //   icon: "ri-coin-line",
+  // },
 
   {
-    title: "Coinbase",
-    desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium accusamus repellat rerum consequatur explicabo? Reiciendis!",
-    icon: "ri-coin-line",
-  },
-
-  {
-    title: "Metamask",
-    desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium accusamus repellat rerum consequatur explicabo? Reiciendis!",
+    title: "MetaMask",
+    desc: "Connect your MetaMask wallet",
     icon: "ri-money-cny-circle-line",
-  },
+  }
 
-  {
-    title: "Authereum",
-    desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium accusamus repellat rerum consequatur explicabo? Reiciendis!",
-    icon: "ri-bit-coin-line",
-  },
+  // {
+  //   title: "Authereum",
+  //   desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium accusamus repellat rerum consequatur explicabo? Reiciendis!",
+  //   icon: "ri-bit-coin-line",
+  // },
 ];
 
 const Wallet = ({ onLoggedIn }) => {
   const [loading, setLoading] = useState(false); // Loading button state
   const [currentAccount, setCurrentAccount] = useState(""); // Connected wallet public address
-  const { setShowAlert, setSuccess, setAlertMessage } = useContext(WebContext);
+  const { 
+    setShowAlert, 
+    setSuccess, 
+    setAlertIcon, 
+    setAlertTitle, 
+    setAlertMessage,
+    setIsRedirect,
+    setAutoredirect
+   } = useContext(WebContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -178,6 +186,8 @@ const Wallet = ({ onLoggedIn }) => {
       .then(() => window.location.reload())
       .catch((err) => {
         setShowAlert(true);
+        setAlertIcon('error');
+        setAlertTitle('Error');
         setAlertMessage(err.message);
         setSuccess(false);
         setLoading(false);
@@ -190,9 +200,12 @@ const Wallet = ({ onLoggedIn }) => {
    */
   const handleClick = async (e) => {
     setLoading(true);
-
     if (!window.ethereum) {
-      setAlertMessage("Please install MetaMask to continue.");
+      setAlertIcon('error');
+      setAlertTitle('MetaMask Required');
+      setAlertMessage("Please install MetaMask to continue.\nYou will be redirected to the installation page shortly");
+      setIsRedirect(true)
+      setAutoredirect('https://metamask.io/download/')
       setShowAlert(true);
       setSuccess(false);
       setLoading(false);
@@ -208,7 +221,7 @@ const Wallet = ({ onLoggedIn }) => {
       <section>
         <Container>
           <Row>
-            <Col lg="12" className="mb-5 text-center">
+            {/* <Col lg="12" className="mb-5 text-center">
               <div className="w-50 m-auto">
                 <h3 className="text-light">Connect your wallet</h3>
                 <p>
@@ -217,7 +230,7 @@ const Wallet = ({ onLoggedIn }) => {
                   unde officiis placeat!
                 </p>
               </div>
-            </Col>
+            </Col> */}
 
             {wallet__data.map((item, index) => (
               <Col lg="3" md="4" sm="6" key={index} className="mb-4" onClick={handleClick}>

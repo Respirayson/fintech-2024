@@ -6,28 +6,28 @@ import "./stepsection.css";
 
 const STEP__DATA = [
   {
-    title: "Setup your wallet",
-    desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Suscipit eligendi, facilis voluptatum fugit illum ",
+    title: "SETUP",
+    desc: "Connect via MetaMask to securely manage your digital assets and engage in decentralized transactions",
     icon: "ri-wallet-line",
   },
 
   {
-    title: "Create your collection",
-    desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Suscipit eligendi, facilis voluptatum fugit illum ",
+    title: "CREATE",
+    desc: "Design and establish your customised, transparent, tamper-proof insurance policies effortlessly",
     icon: "ri-layout-masonry-line",
   },
 
   {
-    title: "Add your NFTs",
-    desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Suscipit eligendi, facilis voluptatum fugit illum ",
+    title: "SHOP",
+    desc: "Explore a diverse range of innovative decentralized insurance policies available on the marketplace",
     icon: "ri-image-line",
   },
 
   {
-    title: "List them for sale",
-    desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Suscipit eligendi, facilis voluptatum fugit illum ",
+    title: "SELL",
+    desc: "List your insurance offerings on the marketplacee and let smart contracts handle the execution of policies",
     icon: "ri-list-check",
-  },
+  }
 ];
 
 const StepSection = () => {
@@ -36,7 +36,7 @@ const StepSection = () => {
       <Container>
         <Row>
           <Col lg="12" className="mb-4">
-            <h3 className="step__title">Create and sell your NFTs</h3>
+            <h3 className="step__title">Endless Opportunities Await</h3>
           </Col>
 
           {STEP__DATA.map((item, index) => (

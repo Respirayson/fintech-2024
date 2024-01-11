@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { Container, Row, Col } from "reactstrap";
 import CommonSection from "../components/ui/Common-section/CommonSection";
-import NftCard from "../components/ui/Nft-card/NftCard";
+import PolicyPreview from "../components/ui/PolicyCard/PolicyPreview";
 import img from "../assets/images/img-01.jpg";
 import avatar from "../assets/images/ava-01.png";
+import { checkWalletConnected } from '../utils/connect'
+import axios from 'axios';
 
 import "../styles/create-item.css";
+import PolicyForm from "../components/CreatePolicyForm/CreatePolicyForm";
+
 
 const item = {
   id: "01",
@@ -18,72 +22,84 @@ const item = {
   currentBid: 7.89,
 };
 
+
 const Create = () => {
+  const [currentAccount, setCurrentAccount] = useState("");
+  useEffect(() => {
+    /**
+     * Fetches the connected wallet account on component mount.
+     */
+    async function fetchData() {
+      const account = await checkWalletConnected();
+      setCurrentAccount(account);
+      console.log(currentAccount)
+    }
+    fetchData();
+    window?.ethereum?.on("accountsChanged", fetchData);
+  }, []);
+
+
+  const [formData, setFormData] = useState({
+      publicAddress: currentAccount,
+      policyName: '-',
+      issuerName: '-',
+      policyType: '-',
+      premium: 0,
+      startDate: '-',
+      maturityDate: '-',
+      description: '-',
+  });
+
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+          formData.publicAddress = currentAccount
+          const response = await axios.post('http://localhost:8000/policy', formData);
+          console.log('Policy created:', response.data);
+      } catch (error) {
+          console.error('Error creating policy:', error.message);
+      } finally {
+        setFormData({
+          publicAddress: currentAccount,
+          policyName: '',
+          issuerName: '',
+          policyType: '',
+          premium: 0,
+          startDate: '',
+          maturityDate: '',
+          description: '',
+        })
+      }
+  };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+          ...formData,
+          [name]: value,
+        });
+        console.log(formData)
+    };
+
+
   return (
     <>
       <CommonSection title="Create Item" />
 
       <section>
-        <Container>
-          <Row>
-            <Col lg="3" md="4" sm="6">
-              <h5 className="mb-4 text-light">Preview Item</h5>
-              <NftCard item={item} />
-            </Col>
-
-            <Col lg="9" md="8" sm="6">
-              <div className="create__item">
-                <form>
-                  <div className="form__input">
-                    <label htmlFor="">Upload File</label>
-                    <input type="file" className="upload__input" />
-                  </div>
-
-                  <div className="form__input">
-                    <label htmlFor="">Price</label>
-                    <input
-                      type="number"
-                      placeholder="Enter price for one item (ETH)"
-                    />
-                  </div>
-
-                  <div className="form__input">
-                    <label htmlFor="">Minimum Bid</label>
-                    <input type="number" placeholder="Enter minimum bid" />
-                  </div>
-
-                  <div className=" d-flex align-items-center gap-4">
-                    <div className="form__input w-50">
-                      <label htmlFor="">Starting Date</label>
-                      <input type="date" />
-                    </div>
-
-                    <div className="form__input w-50">
-                      <label htmlFor="">Expiration Date</label>
-                      <input type="date" />
-                    </div>
-                  </div>
-
-                  <div className="form__input">
-                    <label htmlFor="">Title</label>
-                    <input type="text" placeholder="Enter title" />
-                  </div>
-
-                  <div className="form__input">
-                    <label htmlFor="">Description</label>
-                    <textarea
-                      name=""
-                      id=""
-                      rows="7"
-                      placeholder="Enter description"
-                      className="w-100"
-                    ></textarea>
-                  </div>
-                </form>
-              </div>
-            </Col>
-          </Row>
-        </Container>
+        {currentAccount &&
+          <Container>
+            <Row>
+              <Col lg="3" md="4" sm="6">
+                <h5 className="mb-4 text-light">Preview Item</h5>
+                <PolicyPreview formData={formData} handleChange={handleChange}/>
+              </Col>
+              <Col lg="9" md="8" sm="6">
+                <PolicyForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} publicAddress={currentAccount}/>
+              </Col>
+            </Row>
+          </Container>
+        }
       </section>
     </>
   );

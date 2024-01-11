@@ -24,6 +24,45 @@
   padding: 40px 25px;
 }
 
+.form__input select {
+  width: 100%;
+  padding: 7px 25px;
+  color: #fff;
+  font-size: 0.8rem;
+  background: transparent;
+  border: 1px solid rgba(221, 221, 221, 0.171);
+  outline: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Optional: Add some styling for the options */
+.form__input select option {
+  width: 100%;
+  padding: 7px 25px;
+  color: #000;
+  font-size: 0.8rem;
+  border: 1px solid rgba(221, 221, 221, 0.171);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="submit"] {
+  padding: 7px 25px;
+  color: #fff;
+  font-size: 0.8rem;
+  background: transparent;
+  border: 1px solid rgba(221, 221, 221, 0.171);
+  outline: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
 ::-webkit-calendar-picker-indicator {
   filter: invert(1);
   cursor: pointer;

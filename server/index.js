@@ -20,6 +20,8 @@ import {
   sourceBridgeAbi,
   sourceTokenMinterAbi,
 } from "../client/src/constants/addresses.js";
+import User from "./mongodb/models/user.js";
+import Policy from "./mongodb/models/policy.js";
 
 dotenv.config();
 
@@ -33,6 +35,77 @@ mountRoutes(app);
 app.get("/", (req, res) => {
   res.send("Hello World! Checking whether it works or not");
 });
+
+// Get All Existing Users (FOR TESTING)
+app.get('/users', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+// Delete Exisiting User
+app.delete('/users', async (req, res) => {
+  try {
+    const { username } = req.body.username;
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }    
+    await User.deleteOne({ username });
+    res.status(200).json({ message: 'User deleted successfully', user});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Get All Existing Users (FOR TESTING)
+app.get('/policy', async (req, res) => {
+  try {
+    const users = await Policy.find();
+    res.json(users);
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Add Policy
+app.post('/policy', async (req, res) => {
+  try {
+    console.log(req.body);
+    const { publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description } = req.body;
+    const newPolicy = new Policy({ publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description });
+    await newPolicy.save()
+    res.status(200);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+})
+
+// Delete Policy
+app.delete('/policy', async (req, res) => {
+  try {
+    const policy = await Policy.findOne(req.body);
+    if (!policy) {
+      return res.status(404).json({ message: 'Policy not found' });
+    }
+    await Policy.deleteOne({ policy });
+    res.status(200).json({ message: 'Policy deleted successfully', policy});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 
 export const startServer = async () => {
   try {
@@ -79,10 +152,10 @@ export const startServer = async () => {
     );
 
     let data = await contract.name();
-    console.log("Polygon Contract name: ", data);
+    console.log("Polygon Contract Name: ", data);
 
     let sepoliaData = await sepoliaContract.name();
-    console.log("Sepolia contract name: ", sepoliaData);
+    console.log("Sepolia contract Name: ", sepoliaData);
 
     srcBridge.on("Transfer", async (from, to, tokenId, date, nonce) => {
       // bridgeToken is called on srcBridge

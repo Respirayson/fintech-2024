@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import CommonSection from "../components/ui/Common-section/CommonSection";
 
-import NftCard from "../components/ui/Nft-card/NftCard";
+import NftCard from "../components/ui/PolicyCard/PolicyPreview";
 
 import { NFT__DATA } from "../assets/data/data";
 
 import { Container, Row, Col } from "reactstrap";
 
 import "../styles/market.css";
+
+import axios from 'axios';
+import PolicyCard from "../components/ui/PolicyCard/PolicyCard";
 
 const Market = () => {
   const [data, setData] = useState(NFT__DATA);
@@ -44,6 +47,24 @@ const Market = () => {
     }
   };
 
+  const [policies, setPolicies] = useState([]);
+
+  useEffect(() => {
+    // Fetch policies when the component mounts
+    const fetchPolicies = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/policy');
+        setPolicies(response.data);
+      } catch (error) {
+        console.error('Error fetching policies:', error);
+      }
+    };
+
+    fetchPolicies();
+  }, []);
+
+  console.log(policies)
+
   return (
     <>
       <CommonSection title={"MarketPlace"} />
@@ -51,7 +72,7 @@ const Market = () => {
       <section>
         <Container>
           <Row>
-            <Col lg="12" className="mb-5">
+            {/* <Col lg="12" className="mb-5">
               <div className="market__product__filter d-flex align-items-center justify-content-between">
                 <div className="filter__left d-flex align-items-center gap-5">
                   <div className="all__category__filter">
@@ -83,11 +104,10 @@ const Market = () => {
                   </select>
                 </div>
               </div>
-            </Col>
-
-            {data?.map((item) => (
-              <Col lg="3" md="4" sm="6" className="mb-4" key={item.id}>
-                <NftCard item={item} />
+            </Col> */}
+            {policies && policies.map((policy) => (
+              <Col lg="3" md="4" sm="6" className="mb-4" key={policy._id}>
+                <PolicyCard key={policy._id} {...policy} />
               </Col>
             ))}
           </Row>
