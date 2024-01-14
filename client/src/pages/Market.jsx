@@ -57,6 +57,10 @@ const Market = () => {
         return a.premium - b.premium;
       } else if (sortBy === 'price-desc') {
         return b.premium - a.premium;
+      } else if (sortBy === 'time-created-asc') {
+        return a.timeCreated - b.timeCreated;
+      } else if (sortBy === 'time-created-desc') {
+        return b.timeCreated - a.timeCreated;
       }
       return 0; // Default case, no sorting
     });
@@ -99,6 +103,8 @@ const Market = () => {
                     <option value="price-desc">Price (High To Low)</option>
                     <option value="start-date">Start Date</option>
                     <option value="maturity-date">Maturity Date</option>
+                    <option value="time-created-desc">Time Created (Newest)</option>
+                    <option value="time-created-asc">Time Created (Oldest)</option>
                   </select>
                 </div>
               </div>

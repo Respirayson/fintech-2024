@@ -13,8 +13,30 @@ const PolicyCard = ({
     premium,
     startDate,
     maturityDate,
-    description
+    description,
+    timeCreated
   }) => {
+    
+  function formatDate(date) {
+    const newDate = new Date(date);
+    const year = newDate.getFullYear();
+    const month = String(newDate.getMonth() + 1).padStart(2, '0');
+    const day = String(newDate.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+  }
+  
+  function formatDateTime(date) {
+    const newDate = new Date(date);
+    const year = newDate.getFullYear();
+    const month = String(newDate.getMonth() + 1).padStart(2, '0');
+    const day = String(newDate.getDate()).padStart(2, '0');
+    const hours = String(newDate.getHours()).padStart(2, '0');
+    const minutes = String(newDate.getMinutes()).padStart(2, '0');
+    const seconds = String(newDate.getSeconds()).padStart(2, '0');
+    const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    return formattedDateTime;
+  }
 
   const [showModal, setShowModal] = useState(false);
 
@@ -49,6 +71,18 @@ const PolicyCard = ({
         <div className="creator__info w-100 d-flex align-items-center justify-content-between">
           <h6>Type</h6>
           <p>{policyType}</p>
+        </div>
+        <div className="creator__info w-100 d-flex align-items-center justify-content-between">
+          <h6>Start Date</h6>
+          <p>{formatDate(startDate)}</p>
+        </div>
+        <div className="creator__info w-100 d-flex align-items-center justify-content-between">
+          <h6>Maturity Date</h6>
+          <p>{formatDate(maturityDate)}</p>
+        </div>
+        <div className="creator__info w-100 d-flex align-items-center justify-content-between">
+          <h6>Created At</h6>
+          <p>{formatDateTime(timeCreated)}</p>
         </div>
         <div className=" mt-3 d-flex align-items-center justify-content-between">
           <button

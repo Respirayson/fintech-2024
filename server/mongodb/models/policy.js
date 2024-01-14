@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import moment from 'moment-timezone';
 
 const PolicySchema = new mongoose.Schema({
     publicAddress: {
@@ -33,6 +34,10 @@ const PolicySchema = new mongoose.Schema({
         type: String,
         required: false,
         default: ""
+    },
+    timeCreated: {
+        type: Date,
+        required: true
     }
 });
 

@@ -41,6 +41,14 @@ const PolicyPreview = ({formData}) => {
           <h6>Type</h6>
           <p>{formData.policyType}</p>
         </div>
+        <div className="creator__info w-100 d-flex align-items-center justify-content-between">
+          <h6>Start Date</h6>
+          <p>{formData.startDate}</p>
+        </div>
+        <div className="creator__info w-100 d-flex align-items-center justify-content-between">
+          <h6>Maturity Date</h6>
+          <p>{formData.maturityDate}</p>
+        </div>
         <div className=" mt-3 d-flex align-items-center justify-content-between">
           <button
             className="bid__btn d-flex align-items-center gap-1"

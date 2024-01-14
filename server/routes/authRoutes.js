@@ -110,6 +110,7 @@ router.route('/verify').post(async (req, res) => {
   }
   // If verification is successful, send the payload as the response
   res.send(payload);
+  return;
 });
 
 // Export the router

@@ -82,9 +82,12 @@ app.post('/policy', async (req, res) => {
   try {
     console.log(req.body);
     const { publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description } = req.body;
-    const newPolicy = new Policy({ publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description });
+    const timeCreated = new Date(Date.now());
+    const newPolicy = new Policy({ publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description, timeCreated });
     await newPolicy.save()
-    res.status(200).json({ message: "Successfully added policy"});
+    res.status(200).json({
+      message: "Successfully added policy"
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
@@ -105,7 +108,6 @@ app.delete('/policy', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
-
 
 export const startServer = async () => {
   try {

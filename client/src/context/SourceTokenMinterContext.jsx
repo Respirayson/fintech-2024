@@ -40,7 +40,7 @@ export function SourceTokenMinterProvider({ children }) {
           SourceTokenMinterAddress,
           sourceTokenMinterAbi
         );
-
+        console.log("CONTRACT")
         console.log(contract)
 
         const transaction = await contract.createNewPolicy(
@@ -54,15 +54,17 @@ export function SourceTokenMinterProvider({ children }) {
 
         const txn = await contract.setApprovalForAll(SourceBridgeAddress, true);
         await txn.wait();
+        
+        console.log("TRANSACTION HASH")
+        console.log(transaction.hash)
 
-        console.log(
-          `1 Token successfully sent - Transaction hash: ${transaction.hash}`
-        );
+        return transaction.hash
       } else {
-        console.log("Ethereum is not present");
+        throw new Error("Ethereum is not present")
       }
     } catch (err) {
       console.log(err);
+      throw new Error(err);
     }
   };
 
@@ -78,11 +80,13 @@ export function SourceTokenMinterProvider({ children }) {
 
       const transaction = await contract.setApprovalForAll(SourceBridgeAddress, true);
       await transaction.wait();
+      return transaction.hash
       console.log(
         `Approved bridge contract to trasfer token - Transaction hash: ${transaction.hash}`
       );
     } else {
       console.log("Ethereum is not present");
+      throw new Error("Ethereum is not present")
     }
   };
 

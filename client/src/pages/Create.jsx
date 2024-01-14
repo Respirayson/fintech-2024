@@ -9,18 +9,23 @@ import axios from 'axios';
 import "../styles/create-item.css";
 import PolicyForm from "../components/CreatePolicyForm/CreatePolicyForm";
 import { WebContext } from '../context/WebContext';
+import { SourceTokenMinterContext } from "../context/SourceTokenMinterContext";
 import { useNavigate } from 'react-router-dom';
+
 const Create = () => {
   const navigate = useNavigate();
   const [currentAccount, setCurrentAccount] = useState("");
   const { 
     setShowAlert, 
-    setSuccess, 
     setAlertIcon, 
     setAlertTitle, 
     setAlertMessage
-   } = useContext(WebContext);
+  } = useContext(WebContext);
 
+  const {
+    mintNewPolicyToken,
+    approveSourceBridge
+  } = useContext(SourceTokenMinterContext);
 
   useEffect(() => {
     /**
@@ -45,6 +50,7 @@ const Create = () => {
       startDate: '-',
       maturityDate: '-',
       description: '-',
+      timeCreated: '-'
   });
 
   const handleSubmit = async (e) => {
@@ -56,8 +62,14 @@ const Create = () => {
           setAlertIcon('success');
           setAlertTitle('Congratulations');
           setAlertMessage(response.data.message);
-          setTimeout(3500)
-          navigate("/home");
+          setTimeout(() => {
+            navigate('/');
+          }, 10000);
+          // console.log(response.data)
+          // const mintTxHash = await mintNewPolicyToken(1, formData.startDate, formData.maturityDate, formData.name, formData.premium);
+          // console.log(`1 Token successfully sent - Transation hash : ${mintTxHash}`);
+          // const sourceBridgeTxHash = await approveSourceBridge();
+          // console.log(`Approved bridge contract to trasfer token - Transaction hash: ${sourceBridgeTxHash}`);
       } catch (err) {
         setShowAlert(true);
         setAlertIcon('error');
