@@ -126,7 +126,7 @@ const Header = () => {
                       navClass.isActive ? "active" : ""
                     }
                   >
-                    {ethBalance} ETH
+                    {ethBalance}
                   </NavLink>
                 </li>
               )}

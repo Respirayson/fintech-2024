@@ -25,7 +25,7 @@ export function WebProvider({ children }) {
   const [success, setSuccess] = useState(false);
 
   const [currentAccount, setCurrentAccount] = useState(null);
-  const [ethBalance, setEthBalance] = useState(0);
+  const [ethBalance, setEthBalance] = useState("");
 
   const [authenticated, setAuthenticated] = useState(false);
 
@@ -35,14 +35,18 @@ export function WebProvider({ children }) {
    */
   const checkAuthenticated = async () => {
     const token = localStorage.getItem("token");
-  
+
     if (token) {
       try {
-        const response = await axios.post("http://localhost:8000/api/v1/auth/verify", { token }, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await axios.post(
+          "http://localhost:8000/api/v1/auth/verify",
+          { token },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const data = response.data;
         if (data.error) {
           setAuthenticated(false);
@@ -75,6 +79,20 @@ export function WebProvider({ children }) {
   };
 
   /**
+   * Returns the correct token symbol based on the chain ID
+   */
+  const getCorrectTokenSymbol = (chainID) => {
+    console.log(chainID);
+    if (chainID == 0xaa36a7) {
+      return "ETH";
+    } else if (chainID == 0x13881) {
+      return "MATIC";
+    } else {
+      return "UNKNOWN";
+    }
+  };
+
+  /**
    * Check if the wallet is connected and set the current account
    */
   const checkIfWalletIsConnected = async () => {
@@ -94,7 +112,7 @@ export function WebProvider({ children }) {
         const provider = new ethers.BrowserProvider(ethereum);
         const account = accounts[0];
         const balance = await provider.getBalance(accounts[0]);
-        setEthBalance(parseFloat(ethers.formatEther(balance)).toFixed(3));
+        setEthBalance(parseFloat(ethers.formatEther(balance)).toFixed(3) + " " + getCorrectTokenSymbol(ethereum.chainId));
         setCurrentAccount(account);
         console.log(account);
       } else {
