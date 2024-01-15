@@ -108,6 +108,7 @@ export function WebProvider({ children }) {
   // Check if the wallet is connected on component mount
   useEffect(() => {
     checkIfWalletIsConnected();
+    window?.ethereum?.on("chainChanged", checkIfWalletIsConnected);
   }, []);
 
   /**

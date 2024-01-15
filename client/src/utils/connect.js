@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { ethers } from "ethers";
 
 /**
  * Connects the wallet using MetaMask
@@ -6,7 +6,7 @@ import { ethers } from 'ethers';
  */
 const connectWallet = async () => {
   const accounts = await window.ethereum.request({
-    method: 'eth_requestAccounts',
+    method: "eth_requestAccounts",
   });
   return accounts[0];
 };
@@ -22,16 +22,16 @@ const checkWalletConnected = async () => {
   }
 
   try {
-    const accounts = await window.ethereum.request({ 
-      method: 'eth_accounts' 
+    const accounts = await window.ethereum.request({
+      method: "eth_accounts",
     });
     if (accounts.length !== 0) {
       const account = accounts[0];
       console.log(`Connected: ${account}`);
       return account;
     }
-    console.log('Not connected');
-    return '';
+    console.log("Not connected");
+    return "";
   } catch (err) {
     console.log(err);
   }
@@ -54,4 +54,25 @@ const getEthereumContract = async (address, abi) => {
   return contract;
 };
 
-export { connectWallet, checkWalletConnected, getEthereumContract };
+const changeNetwork = async (chainId) => {
+  if (!window.ethereum) {
+    return undefined;
+  }
+
+  try {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: chainId }],
+    });
+  } catch (err) {
+    if (err.code === 4001) {
+      console.log("User rejected request");
+    } else if (err.code === 4902) {
+      console.log("Network not in user's wallet");
+    } else {
+      console.log(`Error: ${err.code}: ${err.message}`);
+    }
+  }
+};
+
+export { connectWallet, checkWalletConnected, getEthereumContract, changeNetwork };

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Container, Row, Col } from "reactstrap";
 import CommonSection from "../components/ui/Common-section/CommonSection";
 import PolicyPreview from "../components/ui/PolicyCard/PolicyPreview";
-import { checkWalletConnected } from "../utils/connect";
+import { changeNetwork } from "../utils/connect";
 import axios from "axios";
 
 import "../styles/create-item.css";
@@ -88,6 +88,8 @@ const Create = () => {
   return (
     <>
       <CommonSection title="Create Item" />
+      <button onClick={async () => await changeNetwork("0xaa36a7")}>Change network</button>
+
 
       <section>
         {authenticated ? (

@@ -7,6 +7,7 @@ import "../styles/market.css";
 
 import axios from 'axios';
 import PolicyCard from "../components/ui/PolicyCard/PolicyCard";
+import { changeNetwork } from "../utils/connect";
 
 const Market = () => {
   const [policies, setPolicies] = useState([]);
@@ -75,6 +76,7 @@ const Market = () => {
   return (
     <>
       <CommonSection title={"MarketPlace"} />
+      <button onClick={async () => await changeNetwork("0x13881")}>Change network</button>
 
       <section>
         <Container>
