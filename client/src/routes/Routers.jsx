@@ -10,13 +10,13 @@ import Contact from "../pages/Contact";
 import Wallet from "../pages/Wallet";
 import NftDetails from "../pages/NftDetails";
 
-const Routers = ({ onLoggedIn }) => {
+const Routers = ({ onLoggedIn, checkAuthenticated }) => {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/home" />} />
       <Route path="/home" element={<Home />} />
       <Route path="/market" element={<Market />} />
-      <Route path="/create" element={<Create />} />
+      <Route path="/create" element={<Create checkAuthenticated={checkAuthenticated}/>} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/wallet" element={<Wallet onLoggedIn={onLoggedIn} />} />
       <Route path="/market/:id" element={<NftDetails />} />

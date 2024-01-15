@@ -12,9 +12,10 @@ import { WebContext } from '../context/WebContext';
 import { SourceTokenMinterContext } from "../context/SourceTokenMinterContext";
 import { useNavigate } from 'react-router-dom';
 
-const Create = () => {
+const Create = ({ checkAuthenticated }) => {
   const navigate = useNavigate();
   const [currentAccount, setCurrentAccount] = useState("");
+  const [authenticated, setAuthenticated] = useState(false);
   const { 
     setShowAlert, 
     setAlertIcon, 
@@ -28,13 +29,19 @@ const Create = () => {
   } = useContext(SourceTokenMinterContext);
 
   useEffect(() => {
+    checkAuthenticated().then((isAuthenticated) => {
+      setAuthenticated(isAuthenticated);
+    });
+    console.log(`Authenticated Status : ${authenticated}`)
+  }, [checkAuthenticated]);
+
+  useEffect(() => {
     /**
      * Fetches the connected wallet account on component mount.
      */
     async function fetchData() {
-      const account = await checkWalletConnected();
-      setCurrentAccount(account);
-      console.log(currentAccount)
+        const account = await checkWalletConnected();
+        setCurrentAccount(account);
     }
     fetchData();
     window?.ethereum?.on("accountsChanged", fetchData);
@@ -87,24 +94,35 @@ const Create = () => {
       console.log(formData)
   };
 
-
   return (
     <>
       <CommonSection title="Create Item" />
 
       <section>
-        {currentAccount &&
-          <Container>
-            <Row>
-              <Col lg="3" md="4" sm="6">
-                <h5 className="mb-4 text-light">Preview Item</h5>
-                <PolicyPreview formData={formData} handleChange={handleChange}/>
-              </Col>
-              <Col lg="9" md="8" sm="6">
-                <PolicyForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} publicAddress={currentAccount}/>
-              </Col>
-            </Row>
-          </Container>
+        {authenticated ?
+          (
+            <section>
+            <Container>
+              <Row>
+                <Col lg="3" md="4" sm="6">
+                  <h5 className="mb-4 text-light">Preview Item</h5>
+                  <PolicyPreview formData={formData} handleChange={handleChange}/>
+                </Col>
+                <Col lg="9" md="8" sm="6">
+                  <PolicyForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} publicAddress={currentAccount}/>
+                </Col>
+              </Row>
+            </Container>
+            </section>
+          ) : 
+          (
+            <div className="button-container">
+              <p>Please log in to create a policy</p>
+              <button className="custom-button" onClick={() => navigate('/wallet')}>
+                Connect Wallet
+              </button>
+            </div>
+          )
         }
       </section>
     </>

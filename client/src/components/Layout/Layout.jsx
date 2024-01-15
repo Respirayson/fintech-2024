@@ -3,6 +3,7 @@ import Routers from "../../routes/Routers";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Layout = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -13,27 +14,49 @@ const Layout = () => {
    * Checks if the user is authenticated by verifying the token with the server.
    * @returns {boolean} - Returns true if the user is authenticated, false otherwise.
    */
-  const checkAuthenticated = () => {
+  // const checkAuthenticated = () => {
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //     fetch("http://localhost:8000/api/v1/auth/verify", {
+  //       body: JSON.stringify({ token }),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       method: "POST",
+  //     })
+  //       .catch((errors) => {
+  //         console.warn(errors);
+  //       })
+  //       // .then((res) => res.json())
+  //       .then((data) => {
+  //         if (data.error) {
+  //           setAuthenticated(false);
+  //         } else {
+  //           setAuthenticated(true);
+  //         }
+  //       });
+  //   }
+  //   return authenticated;
+  // };
+  const checkAuthenticated = async () => {
     const token = localStorage.getItem("token");
+  
     if (token) {
-      fetch("http://localhost:8000/api/v1/auth/verify", {
-        body: JSON.stringify({ token }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      })
-        .catch((errors) => {
-          console.warn(errors);
-        })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            setAuthenticated(false);
-          } else {
-            setAuthenticated(true);
-          }
+      try {
+        const response = await axios.post("http://localhost:8000/api/v1/auth/verify", { token }, {
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
+        const data = response.data;
+        if (data.error) {
+          setAuthenticated(false);
+        } else {
+          setAuthenticated(true);
+        }
+      } catch (error) {
+        console.warn(error);
+      }
     }
     return authenticated;
   };
@@ -62,7 +85,7 @@ const Layout = () => {
     <>
       <Header checkAuthenticated={checkAuthenticated} handleLogout={handleLogout} />
       <div>
-        <Routers onLoggedIn={handleLogin} />
+        <Routers onLoggedIn={handleLogin} checkAuthenticated={checkAuthenticated}/>
       </div>
       <Footer />
     </>

@@ -25,12 +25,18 @@ const NAV__LINKS = [
 ];
 
 const Header = ({ checkAuthenticated, handleLogout }) => {
-  const headerRef = useRef(null);
   const [currentAccount, setCurrentAccount] = useState(""); // Connected wallet public address
-
+  const [authenticated, setAuthenticated] = useState(false);
+  const headerRef = useRef(null);
   const { ethBalance } = useContext(WebContext);
   const menuRef = useRef(null);
 
+  useEffect(() => {
+    checkAuthenticated().then((isAuthenticated) => {
+      setAuthenticated(isAuthenticated);
+    });
+    console.log(`Authenticated Status : ${authenticated}`)
+  }, [checkAuthenticated]);
   //   useEffect(() => {
   //     window.addEventListener("scroll", () => {
   //       if (
@@ -109,7 +115,7 @@ const Header = ({ checkAuthenticated, handleLogout }) => {
                   </NavLink>
                 </li>
               ))}
-              {checkAuthenticated() && 
+              {authenticated && 
                 <li className="nav__item">
                   <NavLink
                     to="#"
@@ -124,7 +130,7 @@ const Header = ({ checkAuthenticated, handleLogout }) => {
           </div>
 
           <div className="nav__right d-flex align-items-center gap-3 ">
-            {checkAuthenticated() ? (
+            {authenticated ? (
               <div className="row">
                 
                 <div className="col">
