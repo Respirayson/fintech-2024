@@ -37,12 +37,12 @@ const checkWalletConnected = async () => {
   }
 };
 
-const getEthereumContract = (address, abi) => {
+const getEthereumContract = async (address, abi) => {
   if (!window.ethereum) {
     return undefined;
   }
   const provider = new ethers.BrowserProvider(window.ethereum);
-  const signer = provider.getSigner();
+  const signer = await provider.getSigner();
   const contract = new ethers.Contract(address, abi, signer);
 
   console.log({

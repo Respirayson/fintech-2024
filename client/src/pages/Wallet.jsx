@@ -36,7 +36,7 @@ const wallet__data = [
   // },
 ];
 
-const Wallet = ({ onLoggedIn }) => {
+const Wallet = () => {
   const [loading, setLoading] = useState(false); // Loading button state
   const [currentAccount, setCurrentAccount] = useState(""); // Connected wallet public address
   const { 
@@ -46,9 +46,11 @@ const Wallet = ({ onLoggedIn }) => {
     setAlertTitle, 
     setAlertMessage,
     setIsRedirect,
-    setAutoredirect
+    setAutoredirect,
+    handleLogin
    } = useContext(WebContext);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     /**
@@ -181,7 +183,7 @@ const Wallet = ({ onLoggedIn }) => {
         console.log(data);
         return data;
       })
-      .then((res) => onLoggedIn(res.token))
+      .then((res) => handleLogin(res.token))
       .then(() => navigate("/"))
       .then(() => window.location.reload())
       .catch((err) => {
@@ -220,7 +222,7 @@ const Wallet = ({ onLoggedIn }) => {
       <CommonSection title="Connect Wallet" />
       <section>
         <Container>
-          <Row>
+          <Row className='flex flex-row content-center justify-center mx-auto'>
             {/* <Col lg="12" className="mb-5 text-center">
               <div className="w-50 m-auto">
                 <h3 className="text-light">Connect your wallet</h3>
@@ -233,7 +235,7 @@ const Wallet = ({ onLoggedIn }) => {
             </Col> */}
 
             {wallet__data.map((item, index) => (
-              <Col lg="3" md="4" sm="6" key={index} className="mb-4" onClick={handleClick}>
+              <Col key={index} className="mb-4" onClick={handleClick}>
                 <div className="wallet__item">
                   <span>
                     <i className={item.icon}></i>

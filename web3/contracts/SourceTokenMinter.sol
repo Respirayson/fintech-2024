@@ -30,6 +30,11 @@ contract SourceTokenMinter is ERC721, ERC721Burnable {
     // Mapping from owner address to their insurance policies
     mapping(address => Insurance[]) public insuranceToOwner; // owner => insurance
 
+    // Event emitted when a new insurance policy is created
+    event PolicyCreated(
+        uint256 tokenId
+    );
+
     // Constructor to initialize the ERC721 contract
     constructor() ERC721("WInsurance", "WIN") {}
 
@@ -65,7 +70,6 @@ contract SourceTokenMinter is ERC721, ERC721Burnable {
      * @param _maturityDate The maturity date of the policy.
      * @param _name The name of the policy.
      * @param _sumAssured The sum assured by the policy.
-     * @return The new token ID.
      */
     function createNewPolicy(
         uint256 _policyNumber,
@@ -73,7 +77,7 @@ contract SourceTokenMinter is ERC721, ERC721Burnable {
         uint256 _maturityDate,
         string memory _name,
         uint256 _sumAssured
-    ) public returns (uint256) {
+    ) public {
         // Create a new insurance policy
         Insurance memory newInsurance = Insurance(
             _policyNumber,
@@ -92,7 +96,8 @@ contract SourceTokenMinter is ERC721, ERC721Burnable {
         // Mint a new token
         _safeMint(msg.sender, id);
 
-        return id;
+        // Emit an event
+        emit PolicyCreated(id);
     }
 
     /**

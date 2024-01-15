@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from "react";
+import { ethers } from "ethers";
 
 import {
   SourceBridgeAddress,
@@ -40,8 +41,8 @@ export function SourceTokenMinterProvider({ children }) {
           SourceTokenMinterAddress,
           sourceTokenMinterAbi
         );
-        console.log("CONTRACT")
-        console.log(contract)
+        console.log("CONTRACT");
+        console.log(contract);
 
         const transaction = await contract.createNewPolicy(
           policyNumber,
@@ -50,17 +51,18 @@ export function SourceTokenMinterProvider({ children }) {
           name,
           sumAssured
         );
-        await transaction.wait();
+        const receipt = await transaction.wait();
+        console.log(
+          `1 Token successfully sent - Transation hash : ${receipt.hash}`
+        );
+        console.log(receipt.logs[1].args);
+        console.log(receipt.logs[1].eventName);
+        return receipt.logs[1].args
 
-        const txn = await contract.setApprovalForAll(SourceBridgeAddress, true);
-        await txn.wait();
-        
-        console.log("TRANSACTION HASH")
-        console.log(transaction.hash)
-
-        return transaction.hash
+        // const txn = await contract.setApprovalForAll(SourceBridgeAddress, true);
+        // await txn.wait();
       } else {
-        throw new Error("Ethereum is not present")
+        throw new Error("Ethereum is not present");
       }
     } catch (err) {
       console.log(err);
@@ -74,19 +76,21 @@ export function SourceTokenMinterProvider({ children }) {
   const approveSourceBridge = async () => {
     if (ethereum) {
       const contract = await getEthereumContract(
-        SourceTokenMinterAddress,   
+        SourceTokenMinterAddress,
         sourceTokenMinterAbi
       );
 
-      const transaction = await contract.setApprovalForAll(SourceBridgeAddress, true);
+      const transaction = await contract.setApprovalForAll(
+        SourceBridgeAddress,
+        true
+      );
       await transaction.wait();
-      return transaction.hash
       console.log(
         `Approved bridge contract to trasfer token - Transaction hash: ${transaction.hash}`
       );
     } else {
       console.log("Ethereum is not present");
-      throw new Error("Ethereum is not present")
+      throw new Error("Ethereum is not present");
     }
   };
 

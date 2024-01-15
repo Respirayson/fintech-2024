@@ -104,9 +104,11 @@ router.route('/verify').post(async (req, res) => {
     if (err instanceof jwt.JsonWebTokenError) {
       // If the token is invalid, return an error response
       res.status(401).json({ error: 'Invalid token' });
+      return;
     }
     // If there's any other error, return a bad request response
     res.status(400).json({ error: 'Bad request' });
+    return;
   }
   // If verification is successful, send the payload as the response
   res.send(payload);

@@ -49,10 +49,14 @@ const Market = () => {
 
   useEffect(() => {
     const sortedPolicies = sortBy === 'no-sort' ? policies : [...policies].sort((a, b) => {
-      if (sortBy === 'start-date') {
+      if (sortBy === 'start-date-asc') {
         return new Date(a.startDate) - new Date(b.startDate);
-      } else if (sortBy === 'maturity-date') {
+      } else if (sortBy === 'start-date-desc') {
+        return new Date(b.startDate) - new Date(a.startDate);
+      } else if (sortBy === 'maturity-date-asc') {
         return new Date(a.maturityDate) - new Date(b.maturityDate);
+      } else if (sortBy === 'maturity-date-desc') {
+        return new Date(b.maturityDate) - new Date(a.maturityDate);
       } else if (sortBy === 'price-asc') {
         return a.premium - b.premium;
       } else if (sortBy === 'price-desc') {
@@ -101,8 +105,10 @@ const Market = () => {
                     <option value='no-sort'>Sort By</option>
                     <option value="price-asc">Price (Low To High)</option>
                     <option value="price-desc">Price (High To Low)</option>
-                    <option value="start-date">Start Date</option>
-                    <option value="maturity-date">Maturity Date</option>
+                    <option value="start-date-desc">Start Date (Latest)</option>
+                    <option value="start-date-asc">Start Date (Earliest)</option>
+                    <option value="maturity-date-desc">Maturity Date (Latest)</option>
+                    <option value="maturity-date-asc">Maturity Date (Earliest)</option>
                     <option value="time-created-desc">Time Created (Newest)</option>
                     <option value="time-created-asc">Time Created (Oldest)</option>
                   </select>
@@ -115,19 +121,22 @@ const Market = () => {
               </Col>
             ))}
           </Row>
-          <nav>
-            <ul className="pagination">
-              {Array.from({ length: Math.ceil(displayedPolicies.length / itemsPerPage) }).map((_, index) => (
-                <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                  <button onClick={() => paginate(index + 1)} className="page-link">
-                    {index + 1}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          
         </Container>
       </section>
+
+      <nav>
+        <ul className="pagination">
+          {Array.from({ length: Math.ceil(displayedPolicies.length / itemsPerPage) }).map((_, index) => (
+            <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+              <button onClick={() => paginate(index + 1)} className="page-link">
+                {index + 1}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+          
     </>
   );
 };

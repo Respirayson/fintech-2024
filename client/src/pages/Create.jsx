@@ -3,109 +3,126 @@ import React, { useState, useEffect, useContext } from "react";
 import { Container, Row, Col } from "reactstrap";
 import CommonSection from "../components/ui/Common-section/CommonSection";
 import PolicyPreview from "../components/ui/PolicyCard/PolicyPreview";
-import { checkWalletConnected } from '../utils/connect'
-import axios from 'axios';
+import { checkWalletConnected } from "../utils/connect";
+import axios from "axios";
 
 import "../styles/create-item.css";
 import PolicyForm from "../components/CreatePolicyForm/CreatePolicyForm";
-import { WebContext } from '../context/WebContext';
+import { WebContext } from "../context/WebContext";
 import { SourceTokenMinterContext } from "../context/SourceTokenMinterContext";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Create = () => {
   const navigate = useNavigate();
-  const [currentAccount, setCurrentAccount] = useState("");
-  const { 
-    setShowAlert, 
-    setAlertIcon, 
-    setAlertTitle, 
-    setAlertMessage
+  const {
+    setShowAlert,
+    setAlertIcon,
+    setAlertTitle,
+    setAlertMessage,
+    currentAccount,
+    checkAuthenticated,
   } = useContext(WebContext);
 
-  const {
-    mintNewPolicyToken,
-    approveSourceBridge
-  } = useContext(SourceTokenMinterContext);
+  const { mintNewPolicyToken, approveSourceBridge } = useContext(
+    SourceTokenMinterContext
+  );
 
-  useEffect(() => {
-    /**
-     * Fetches the connected wallet account on component mount.
-     */
-    async function fetchData() {
-      const account = await checkWalletConnected();
-      setCurrentAccount(account);
-      console.log(currentAccount)
-    }
-    fetchData();
-    window?.ethereum?.on("accountsChanged", fetchData);
-  }, []);
-
-
+  const [authenticated, setAuthenticated] = useState(false);
   const [formData, setFormData] = useState({
-      publicAddress: currentAccount,
-      policyName: '-',
-      issuerName: '-',
-      policyType: '-',
-      premium: 0,
-      startDate: '-',
-      maturityDate: '-',
-      description: '-',
-      timeCreated: '-'
+    publicAddress: currentAccount,
+    policyName: "-",
+    issuerName: "-",
+    policyType: "-",
+    premium: 0,
+    startDate: "-",
+    maturityDate: "-",
+    description: "-",
+    timeCreated: "-",
   });
 
+  useEffect(() => {
+    checkAuthenticated().then((isAuthenticated) => {
+      setAuthenticated(isAuthenticated);
+    });
+    console.log(`Authenticated Status : ${authenticated}`);
+  }, [authenticated, checkAuthenticated, setAuthenticated]);
+
   const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-          formData.publicAddress = currentAccount
-          const response = await axios.post('http://localhost:8000/policy', formData);
-          setShowAlert(true);
-          setAlertIcon('success');
-          setAlertTitle('Congratulations');
-          setAlertMessage(response.data.message);
-          setTimeout(() => {
-            navigate('/');
-          }, 10000);
-          // console.log(response.data)
-          // const mintTxHash = await mintNewPolicyToken(1, formData.startDate, formData.maturityDate, formData.name, formData.premium);
-          // console.log(`1 Token successfully sent - Transation hash : ${mintTxHash}`);
-          // const sourceBridgeTxHash = await approveSourceBridge();
-          // console.log(`Approved bridge contract to trasfer token - Transaction hash: ${sourceBridgeTxHash}`);
-      } catch (err) {
-        setShowAlert(true);
-        setAlertIcon('error');
-        setAlertTitle('Error');
-        setAlertMessage(err.message);
-      }
+    e.preventDefault();
+    try {
+      formData.publicAddress = currentAccount;
+      const response = await axios.post(
+        "http://localhost:8000/policy",
+        formData
+      );
+      console.log(response.data);
+      const tokenId = await mintNewPolicyToken(1, 1234, 1234, "asdf", 1234);
+      setShowAlert(true);
+      setAlertIcon("success");
+      setAlertTitle("Congratulations");
+      setAlertMessage(response.data.message);
+      console.log(`Minted new policy token - token id: ${tokenId}`);
+      setTimeout(() => {
+        navigate("/");
+      }, 10000);
+      
+      // const sourceBridgeTxHash = await approveSourceBridge();
+      // console.log(`Approved bridge contract to trasfer token - Transaction hash: ${sourceBridgeTxHash}`);
+    } catch (err) {
+      setShowAlert(true);
+      setAlertIcon("error");
+      setAlertTitle("Error");
+      setAlertMessage(err.message);
+    }
   };
 
   const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-      console.log(formData)
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+    console.log(formData);
   };
-
 
   return (
     <>
       <CommonSection title="Create Item" />
 
       <section>
-        {currentAccount &&
-          <Container>
-            <Row>
-              <Col lg="3" md="4" sm="6">
-                <h5 className="mb-4 text-light">Preview Item</h5>
-                <PolicyPreview formData={formData} handleChange={handleChange}/>
-              </Col>
-              <Col lg="9" md="8" sm="6">
-                <PolicyForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} publicAddress={currentAccount}/>
-              </Col>
-            </Row>
-          </Container>
-        }
+        {authenticated ? (
+          <section>
+            <Container>
+              <Row>
+                <Col lg="3" md="4" sm="6">
+                  <h5 className="mb-4 text-light">Preview Item</h5>
+                  <PolicyPreview
+                    formData={formData}
+                    handleChange={handleChange}
+                  />
+                </Col>
+                <Col lg="9" md="8" sm="6">
+                  <PolicyForm
+                    formData={formData}
+                    handleChange={handleChange}
+                    handleSubmit={handleSubmit}
+                    publicAddress={currentAccount}
+                  />
+                </Col>
+              </Row>
+            </Container>
+          </section>
+        ) : (
+          <div className="button-container">
+            <p>Please log in to create a policy</p>
+            <button
+              className="custom-button"
+              onClick={() => navigate("/wallet")}
+            >
+              Connect Wallet
+            </button>
+          </div>
+        )}
       </section>
     </>
   );

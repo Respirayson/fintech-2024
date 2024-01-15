@@ -24,11 +24,13 @@ const NAV__LINKS = [
   },
 ];
 
-const Header = ({ checkAuthenticated, handleLogout }) => {
+const Header = () => {
   const headerRef = useRef(null);
   const [currentAccount, setCurrentAccount] = useState(""); // Connected wallet public address
+  const [authenticated, setAuthenticated] = useState(false);
 
-  const { ethBalance } = useContext(WebContext);
+  const { ethBalance, checkAuthenticated, handleLogout } =
+    useContext(WebContext);
   const menuRef = useRef(null);
 
   //   useEffect(() => {
@@ -67,6 +69,13 @@ const Header = ({ checkAuthenticated, handleLogout }) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    checkAuthenticated().then((isAuthenticated) => {
+      setAuthenticated(isAuthenticated);
+    });
+    console.log(`Authenticated Status : ${authenticated}`);
+  }, [checkAuthenticated]);
 
   useEffect(() => {
     /**
@@ -109,7 +118,7 @@ const Header = ({ checkAuthenticated, handleLogout }) => {
                   </NavLink>
                 </li>
               ))}
-              {checkAuthenticated() && 
+              {authenticated && (
                 <li className="nav__item">
                   <NavLink
                     to="#"
@@ -119,28 +128,36 @@ const Header = ({ checkAuthenticated, handleLogout }) => {
                   >
                     {ethBalance} ETH
                   </NavLink>
-                </li>}
+                </li>
+              )}
             </ul>
           </div>
 
           <div className="nav__right d-flex align-items-center gap-3 ">
-            {checkAuthenticated() ? (
+            {authenticated ? (
               <div className="row">
-                
                 <div className="col">
                   <button className="btn d-flex gap-2 align-items-center">
                     <span>
                       <i className="ri-logout-box-line"></i>
                     </span>
-                    <Link style={{ whiteSpace: 'nowrap' }} onClick={handleLogout}>Sign Out</Link>
+                    <Link
+                      to="/"
+                      style={{ whiteSpace: "nowrap" }}
+                      onClick={() => {
+                        handleLogout();
+                      }}
+                    >
+                      Sign Out
+                    </Link>
                   </button>
                 </div>
               </div>
-              ) : (
+            ) : (
               <button className="btn d-flex gap-2 align-items-center">
-              <span>
-                <i className="ri-wallet-line"></i>
-              </span>
+                <span>
+                  <i className="ri-wallet-line"></i>
+                </span>
                 <Link to="/wallet">Connect Wallet</Link>
               </button>
             )}

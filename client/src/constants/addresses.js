@@ -1,19 +1,11 @@
-// import { createRequire } from "module";
-// const require = createRequire(import.meta.url);
-
 import destMinter from "./DestinationTokenMinter.json" assert { type: "json" };
 import srcMinter from "./SourceTokenMinter.json" assert { type: "json" };
 import srcBridge from "./SourceBridge.json" assert { type: "json" };
 import destBridge from "./DestinationBridge.json" assert { type: "json" };
 import destMarketplace from "./DestinationChainMarketplace.json" assert { type: "json" };
-// const destMinter = require("./DestinationTokenMinter.json");
-// const srcMinter = require("./SourceTokenMinter.json");
-// const srcBridge = require("./SourceBridge.json");
-// const destBridge = require("./DestinationBridge.json");
-// const destMarketplace = require("./DestinationChainMarketplace.json");
 
-const SourceTokenMinterAddress = "0x7aD6A4C8E5d8c180A452415a0495EdC2b1226C80";
-const SourceBridgeAddress = "0xd5A29E0dabC5fd265AFA409A992336Ff2F4add50";
+const SourceTokenMinterAddress = "0xc167c047dE102b5184681602a7A62e6f22Ef592D";
+const SourceBridgeAddress = "0x2983b7ee6695036f496cE91919460B0E6D039713";
 
 const DestinationBridgeAddress = "0xFBCe9EA0B19e9651488Cc372eD3F4C2Ab57FE797";
 const DestinationTokenMinterAddress =

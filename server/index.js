@@ -19,7 +19,7 @@ import {
   destinationTokenMinterAbi,
   sourceBridgeAbi,
   sourceTokenMinterAbi,
-} from "../client/src/constants/addresses.js";
+} from "./constants/addresses.js";
 import User from "./mongodb/models/user.js";
 import Policy from "./mongodb/models/policy.js";
 
@@ -85,8 +85,10 @@ app.post('/policy', async (req, res) => {
     const timeCreated = new Date(Date.now());
     const newPolicy = new Policy({ publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description, timeCreated });
     await newPolicy.save()
+    const insertedPolicy = await Policy.findById(newPolicy._id);
     res.status(200).json({
-      message: "Successfully added policy"
+      message: "Successfully added policy",
+      policy: insertedPolicy.toJSON()
     });
   } catch (error) {
     console.error(error);
