@@ -11,20 +11,12 @@ import { getEthereumContract } from "../utils/connect.js";
 
 import axios from "axios";
 
-// Create a context for the Trading Card Minter
 export const DestMarketplaceContext = createContext();
 
 const { ethereum } = window;
 
-/**
- * Component representing the Trading Card Minter provider
- * @param {Object} props - The component props
- * @param {ReactNode} props.children - The children to be rendered inside the provider
- * @returns {JSX.Element} - The JSX element
- */
 export function DestMarketplaceProvider({ children }) {
   const { currentAccount } = useContext(WebContext);
-  console.log(currentAccount);
 
   /**
    * Add a listing for an NFT
