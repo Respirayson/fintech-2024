@@ -6,15 +6,18 @@ import "bootstrap/dist/css/bootstrap.css";
 import "remixicon/fonts/remixicon.css";
 import { WebProvider } from "./context/WebContext.jsx";
 import { SourceTokenMinterProvider } from "./context/SourceTokenMinterContext.jsx";
+import { DestMarketplaceProvider } from "./context/DestMarketplaceContext.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <WebProvider>
-      <SourceTokenMinterProvider>
-        <Router>
-          <App />
-        </Router>
-      </SourceTokenMinterProvider>
+      <DestMarketplaceProvider>
+        <SourceTokenMinterProvider>
+          <Router>
+            <App />
+          </Router>
+        </SourceTokenMinterProvider>
+      </DestMarketplaceProvider>
     </WebProvider>
   </React.StrictMode>
 );
