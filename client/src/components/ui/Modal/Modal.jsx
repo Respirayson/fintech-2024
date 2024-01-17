@@ -17,7 +17,7 @@ const Modal = ({ setShowModal, publicAddress, description, premium }) => {
     <div className="modal__wrapper">
       <div className="single__modal">
         <span className="close__modal">
-          <i class="ri-close-line" onClick={() => setShowModal(false)}></i>
+          <i className="ri-close-line" onClick={() => setShowModal(false)}></i>
         </span>
         <h6 className="text-center text-light">Place a Bid</h6>
         <p className="text-center text-light">

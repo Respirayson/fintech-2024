@@ -1,37 +1,36 @@
 import React, { useState } from "react";
 import "./policy-card.css";
-import Modal from "../Modal/Modal";
+import SellModal from "../Modal/SellModal";
 
-const PolicyCard = ({
-    _id,
-    publicAddress,
-    issuerName,
-    policyName,
-    policyType,
-    premium,
-    startDate,
-    maturityDate,
-    description,
-    timeCreated
-  }) => {
-    
+const SellPolicyCard = ({
+  _id,
+  publicAddress,
+  issuerName,
+  policyName,
+  policyType,
+  premium,
+  startDate,
+  maturityDate,
+  description,
+  timeCreated,
+}) => {
   function formatDate(date) {
     const newDate = new Date(date);
     const year = newDate.getFullYear();
-    const month = String(newDate.getMonth() + 1).padStart(2, '0');
-    const day = String(newDate.getDate()).padStart(2, '0');
+    const month = String(newDate.getMonth() + 1).padStart(2, "0");
+    const day = String(newDate.getDate()).padStart(2, "0");
     const formattedDate = `${year}-${month}-${day}`;
     return formattedDate;
   }
-  
+
   function formatDateTime(date) {
     const newDate = new Date(date);
     const year = newDate.getFullYear();
-    const month = String(newDate.getMonth() + 1).padStart(2, '0');
-    const day = String(newDate.getDate()).padStart(2, '0');
-    const hours = String(newDate.getHours()).padStart(2, '0');
-    const minutes = String(newDate.getMinutes()).padStart(2, '0');
-    const seconds = String(newDate.getSeconds()).padStart(2, '0');
+    const month = String(newDate.getMonth() + 1).padStart(2, "0");
+    const day = String(newDate.getDate()).padStart(2, "0");
+    const hours = String(newDate.getHours()).padStart(2, "0");
+    const minutes = String(newDate.getMinutes()).padStart(2, "0");
+    const seconds = String(newDate.getSeconds()).padStart(2, "0");
     const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     return formattedDateTime;
   }
@@ -91,11 +90,23 @@ const PolicyCard = ({
             className="bid__btn d-flex align-items-center gap-1"
             onClick={() => setShowModal(true)}
           >
-            <i className="ri-shopping-bag-line"/> 
-            Buy Insurance
+            <i className="ri-shopping-bag-line" />
+            List Policy
           </button>
 
-          {showModal && <Modal setShowModal={setShowModal} publicAddress={publicAddress} description={description} premium={premium}/>}
+          {showModal && (
+            <SellModal
+              setShowModal={setShowModal}
+              policyName={policyName}
+              policyType={policyType}
+              publicAddress={publicAddress}
+              description={description}
+              issuerName={issuerName}
+              startDate={formatDate(startDate)}
+              maturityDate={formatDate(maturityDate)}
+              premium={premium}
+            />
+          )}
 
           {/* <span className="history__link">
             <Link to="#">View History</Link>
@@ -106,4 +117,4 @@ const PolicyCard = ({
   );
 };
 
-export default PolicyCard;
+export default SellPolicyCard;
