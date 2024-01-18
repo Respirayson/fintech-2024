@@ -13,7 +13,8 @@ const BuyPolicyCard = ({
   startDate,
   maturityDate,
   timeCreated,
-  description
+  description,
+  type
   }) => {
     
   function formatDate(date) {
