@@ -1,5 +1,4 @@
 import React, { useState, useEffect, createContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { ethers } from "ethers";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -141,8 +140,6 @@ export function WebProvider({ children }) {
           }
         }
       );
-      console.log(currentAccount)
-      console.log(response.data)
       if (response.data.message === "VALID") {
         console.log("Account Type : Agent")
         setAccountType("Agent");

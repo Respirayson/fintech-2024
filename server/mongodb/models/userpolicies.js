@@ -3,9 +3,14 @@ import mongoose from 'mongoose';
 const UserPolicySchema = new mongoose.Schema({
     tokenId: {
         type: Number,
+        required: true,
+        default: 1
+    },
+    publicAddressOwner: {
+        type: String,
         required: true
     },
-    publicAddress: {
+    publicAddressAgent: {
         type: String,
         required: true
     },
@@ -42,9 +47,18 @@ const UserPolicySchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    type : {
+    timePurchased: {
+        type: Date,
+        required: true
+    },
+    type: {
         type: Number,
         required: true
+    },
+    listed: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 });
 

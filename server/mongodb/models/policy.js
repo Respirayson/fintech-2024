@@ -1,7 +1,15 @@
 import mongoose from 'mongoose';
 
 const PolicySchema = new mongoose.Schema({
-    publicAddress: {
+    policyId: {
+        type: String,
+        required: false
+    },
+    publicAddressOwner: {
+        type: String,
+        required: true
+    },
+    publicAddressAgent: {
         type: String,
         required: true
     },

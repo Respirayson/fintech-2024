@@ -15,12 +15,12 @@ const NAV__LINKS__GENERAL = [
     url: "/market",
   },
   {
-    display: "Contact",
-    url: "/contact",
+    display: "My Policies",
+    url: "/user-policy",
   },
   {
-    display: "My Policies",
-    url: "/user-policy"
+    display: "Contact",
+    url: "/contact",
   }
 ];
 
@@ -38,12 +38,12 @@ const NAV__LINKS__AGENT = [
     url: "/create",
   },
   {
-    display: "Contact",
-    url: "/contact",
-  },
-  {
     display: "My Policies",
     url: "/agent-policy"
+  },
+  {
+    display: "Contact",
+    url: "/contact",
   }
 ];
 
@@ -66,9 +66,7 @@ const Header = () => {
   const headerRef = useRef(null);
   const [currentAccount, setCurrentAccount] = useState(""); // Connected wallet public address
   const [authenticated, setAuthenticated] = useState(false);
-
-  const { ethBalance, checkAuthenticated, handleLogout, accountType } =
-    useContext(WebContext);
+  const { ethBalance, checkAuthenticated, handleLogout, accountType } = useContext(WebContext);
   const menuRef = useRef(null);
 
   //   useEffect(() => {

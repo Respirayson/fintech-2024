@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
-
 import { Container, Row, Col } from "reactstrap";
 import CommonSection from "../components/ui/Common-section/CommonSection";
 import PolicyPreview from "../components/ui/PolicyCard/PolicyPreview";
 import { changeNetwork } from "../utils/connect";
 import axios from "axios";
-
-import "../styles/create-item.css";
 import PolicyForm from "../components/CreatePolicyForm/CreatePolicyForm";
 import { WebContext } from "../context/WebContext";
 import { SourceTokenMinterContext } from "../context/SourceTokenMinterContext";
 import { useNavigate } from "react-router-dom";
+import "../styles/create-item.css";
 
 const Create = () => {
   const navigate = useNavigate();
@@ -29,7 +27,8 @@ const Create = () => {
 
   const [authenticated, setAuthenticated] = useState(false);
   const [formData, setFormData] = useState({
-    publicAddress: currentAccount,
+    publicAddressOwner: currentAccount,
+    publicAddressAgent: currentAccount,
     policyName: "-",
     issuerName: "-",
     policyType: "-",
@@ -90,8 +89,6 @@ const Create = () => {
     <>
       <CommonSection title="Create Item" />
       <button onClick={async () => await changeNetwork("0xaa36a7")}>Change network</button>
-
-
       <section>
         {authenticated ? (
           <section>

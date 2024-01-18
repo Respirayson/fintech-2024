@@ -8,8 +8,6 @@ const Home = () => {
     <>
       <HeroSection />
       <LiveAuction />
-      {/* <SellerSection />
-      <Trending /> */}
       <StepSection /> 
     </>
   );

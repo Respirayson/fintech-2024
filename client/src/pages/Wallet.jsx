@@ -1,13 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-import { WebContext } from '../context/WebContext';
-
-import CommonSection from "../components/ui/Common-section/CommonSection";
 import { Container, Row, Col } from "reactstrap";
-
+import { useNavigate } from 'react-router-dom';
+import { WebContext } from '../context/WebContext';
+import CommonSection from "../components/ui/Common-section/CommonSection";
 import { connectWallet, checkWalletConnected } from "../utils/connect";
-
 import "../styles/wallet.css";
 
 const wallet__data = [

@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-
-import CommonSection from "../components/ui/Common-section/CommonSection";
 import { Container, Row, Col } from "reactstrap";
-
-import "../styles/market.css";
-
+import CommonSection from "../components/ui/Common-section/CommonSection";
 import axios from 'axios';
-import PolicyCard from "../components/ui/PolicyCard/PolicyCard";
 import { changeNetwork } from "../utils/connect";
 import { WebContext } from "../context/WebContext";
+import SellPolicyCard from "../components/ui/PolicyCard/SellPolicyCard";
+import "../styles/market.css";
 
 const UserPolicy = () => {
   const [policies, setPolicies] = useState([]);
@@ -25,14 +22,14 @@ const UserPolicy = () => {
   };
   const { currentAccount } = useContext(WebContext);
 
-
   useEffect(() => {
     // Fetch policies when the component mounts
     const fetchPolicies = async () => {
       try {
+        // TO ADD : TOKEN ID
         const response = await axios.get('http://localhost:8000/user-policy', {
             params: {
-                publicAddress: currentAccount
+                publicAddressOwner: currentAccount
             }
         });
         setPolicies(response.data.policies.sort((a, b) => new Date(a.startDate) - new Date(b.startDate)));
@@ -43,7 +40,6 @@ const UserPolicy = () => {
     }; 
     fetchPolicies();
   }, []);
-
 
   const handleSort = (e) => {
     const sortType = e.target.value;
@@ -69,10 +65,10 @@ const UserPolicy = () => {
         return a.premium - b.premium;
       } else if (sortBy === 'price-desc') {
         return b.premium - a.premium;
-      } else if (sortBy === 'time-created-asc') {
-        return a.timeCreated - b.timeCreated;
-      } else if (sortBy === 'time-created-desc') {
-        return b.timeCreated - a.timeCreated;
+      } else if (sortBy === 'time-purchased-asc') {
+        return a.timePurchased - b.timePurchased;
+      } else if (sortBy === 'time-purchased-desc') {
+        return b.timePurchased - a.timePurchased;
       }
       return 0; // Default case, no sorting
     });
@@ -82,7 +78,7 @@ const UserPolicy = () => {
 
   return (
     <>
-      <CommonSection title={"Created Policies"} />
+      <CommonSection title={"My Policies"} />
       <button onClick={async () => await changeNetwork("0x13881")}>Change network</button>
 
       <section>
@@ -118,15 +114,15 @@ const UserPolicy = () => {
                     <option value="start-date-asc">Start Date (Earliest)</option>
                     <option value="maturity-date-desc">Maturity Date (Latest)</option>
                     <option value="maturity-date-asc">Maturity Date (Earliest)</option>
-                    <option value="time-created-desc">Time Created (Newest)</option>
-                    <option value="time-created-asc">Time Created (Oldest)</option>
+                    <option value="time-purchased-desc">Time Purchased (Newest)</option>
+                    <option value="time-purchased-asc">Time Purchased (Oldest)</option>
                   </select>
                 </div>
               </div>
             </Col>
             {policies && currentPolicies.map((policy) => (
               <Col lg="3" md="4" sm="6" className="mb-4" key={policy._id}>
-                <PolicyCard key={policy._id} {...policy} />
+                <SellPolicyCard key={policy._id} {...policy} />
               </Col>
             ))}
           </Row>

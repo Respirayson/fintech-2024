@@ -1,18 +1,19 @@
 import React, { useState } from "react";
 import "./policy-card.css";
-import Modal from "../Modal/Modal";
+import BuyModal from "../Modal/BuyModal";
 
-const PolicyCardAgent = ({
-    _id,
-    publicAddress,
-    issuerName,
-    policyName,
-    policyType,
-    premium,
-    startDate,
-    maturityDate,
-    description,
-    timeCreated
+const BuyPolicyCard = ({
+  policyId,
+  publicAddressOwner,
+  publicAddressAgent,
+  issuerName,
+  policyName,
+  policyType,
+  premium,
+  startDate,
+  maturityDate,
+  timeCreated,
+  description
   }) => {
     
   function formatDate(date) {
@@ -40,29 +41,19 @@ const PolicyCardAgent = ({
 
   return (
     <div className="single__nft__card">
-      {/* <div className="nft__img">
-        <img src={imgUrl} alt="" className="w-100" />
-      </div> */}
-
       <div className="nft__content">
         <h5 className="nft__title">
           <p>{policyName}</p>
         </h5>
-
         <div className="creator__info-wrapper d-flex gap-3">
-          {/* <div className="creator__img">
-            <img src={creatorImg} alt="" className="w-100" />
-          </div> */}
-
           <div className="creator__info w-100 d-flex align-items-center justify-content-between">
             <div>
               <h6>Issued By</h6>
               <p>{issuerName}</p>
             </div>
-
             <div>
-              <h6>Current Price</h6>
-              <p>{premium} ETH</p>
+              <h6>Premium</h6>
+              <p>${premium}</p>
             </div>
           </div>
         </div>
@@ -84,26 +75,37 @@ const PolicyCardAgent = ({
         </div>
         <div className="creator__info w-100 d-flex align-items-center justify-content-between">
           <h6>Policy ID</h6>
-          <p>{_id}</p>
+          <p>{policyId}</p>
         </div>
         <div className=" mt-3 d-flex align-items-center justify-content-between">
           <button
             className="bid__btn d-flex align-items-center gap-1"
-            // onClick={() => setShowModal(true)}
+            onClick={() => setShowModal(true)}
           >
             <i className="ri-shopping-bag-line"/> 
-            Delist Policy
+            Buy Insurance
           </button>
-
-          {showModal && <Modal setShowModal={setShowModal} publicAddress={publicAddress} description={description} premium={premium}/>}
-
-          {/* <span className="history__link">
-            <Link to="#">View History</Link>
-          </span> */}
+          {showModal && 
+            <BuyModal 
+              setShowModal={setShowModal}
+              policyId={policyId}
+              publicAddressOwner={publicAddressOwner}
+              publicAddressAgent={publicAddressAgent}
+              issuerName={issuerName}
+              policyName={policyName}
+              policyType={policyType}
+              premium={premium}
+              startDate={formatDate(startDate)}
+              maturityDate={formatDate(maturityDate)}
+              timeCreated={formatDateTime(timeCreated)}
+              description={description}
+              type={type}
+            />
+          }
         </div>
       </div>
     </div>
   );
 };
 
-export default PolicyCardAgent;
+export default BuyPolicyCard;

@@ -140,10 +140,10 @@ app.post('/policy', async (req, res) => {
     console.log(req.body);
     const { publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description, type } = req.body;
     const timeCreated = new Date(Date.now());
-    const newPolicy = new Policy({ publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description, timeCreated, type });
-    const newListedPolicy = new ListedPolicy({ publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description, timeCreated, type });
-    await newPolicy.save()
-    await newListedPolicy.save()
+    const newPolicy = new Policy({ publicAddress, publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description, timeCreated, type });
+    const savedPolicy = await newPolicy.save();
+    const policyId = savedPolicy._id;
+    await Policy.updateOne({ _id: savedPolicy._id }, { policyId });
     const insertedPolicy = await Policy.findById(newPolicy._id);
     res.status(200).json({
       message: "Successfully added policy",
@@ -186,6 +186,50 @@ app.get('/listed-policy', async (req, res) => {
   }
 });
 
+// POST new listed policy (Agents)
+app.post('/listed-policy', async (req, res) => {
+  try {
+    console.log(req.body);
+    const {
+      policyId,
+      publicAddressOwner,
+      publicAddressAgent,
+      issuerName,
+      policyName,
+      policyType,
+      premium,
+      startDate,
+      maturityDate,
+      description,
+      timeCreated,
+      type
+    } = req.body;
+    const newListedPolicy = new ListedPolicy({
+      policyId,
+      publicAddressOwner,
+      publicAddressAgent,
+      issuerName,
+      policyName,
+      policyType,
+      premium,
+      startDate,
+      maturityDate,
+      description,
+      timeCreated,
+      type
+    });
+    await newListedPolicy.save()
+    const insertedPolicy = await ListedPolicy.findById(newListedPolicy._id);
+    res.status(200).json({
+      message: "Successfully listed policy",
+      policy: insertedPolicy.toJSON()
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+})
+
 // DELETE listed policy (User Sell / Agent Delist)
 app.delete('/listed-policy', async (req, res) => {
   try {
@@ -194,7 +238,7 @@ app.delete('/listed-policy', async (req, res) => {
       return res.status(404).json({ message: 'Listed Policy not found' });
     }
     await ListedPolicy.deleteOne({ policy });
-    res.status(200).json({ message: 'Listed Policy deleted successfully', policy});
+    res.status(200).json({ message: 'Delisted policy successfully', policy});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
@@ -242,6 +286,69 @@ app.get('/user-policy', async (req, res) => {
         polciies: userPolicies
       });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+})
+
+// POST to user policies
+app.post('/user-policy', async (req, res) => {
+  try {
+    const {
+      tokenId,
+      policyId,
+      publicAddressPreviousOwner,
+      publicAddressOwner,
+      publicAddressAgent,
+      issuerName,
+      policyName,
+      policyType,
+      premium,
+      startDate,
+      maturityDate,
+      description,
+      timeCreated,
+      type
+    } = req.body;
+    const timePurchased = new Date(Date.now());
+    const newUserPolicy = new UserPolicy({
+      tokenId,
+      policyId,
+      publicAddressOwner,
+      publicAddressAgent,
+      issuerName,
+      policyName,
+      policyType,
+      premium,
+      startDate,
+      maturityDate,
+      description,
+      timeCreated,
+      timePurchased,
+      type
+    });
+    await newUserPolicy.save()
+    const insertedUserPolicy = await UserPolicy.findById(newUserPolicy._id);
+    await UserPolicy.deleteOne({
+      tokenId: 1,
+      policyId: policyId,
+      publicAddressOwner: publicAddressPreviousOwner,
+      publicAddressAgent: publicAddressAgent,
+      issuerName: issuerName,
+      policyName: policyName,
+      policyType: policyType,
+      premium: premium,
+      startDate: startDate,
+      maturityDate: maturityDate,
+      description: description,
+      timeCreated: timeCreated,
+      type: 2
+    })
+    res.status(200).json({
+      message: "Successfully purchased policy",
+      policy: insertedUserPolicy.toJSON(),
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

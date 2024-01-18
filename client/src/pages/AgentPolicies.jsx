@@ -8,7 +8,7 @@ import "../styles/market.css";
 import axios from 'axios';
 import { changeNetwork } from "../utils/connect";
 import { WebContext } from "../context/WebContext";
-import PolicyCardAgent from "../components/ui/PolicyCard/PolicyCardAgents";
+import SellPolicyCard from "../components/ui/PolicyCard/SellPolicyCard";
 
 const AgentPolicy = () => {
   const [policies, setPolicies] = useState([]);
@@ -32,7 +32,7 @@ const AgentPolicy = () => {
       try {
         const response = await axios.get('http://localhost:8000/agent-policy', {
             params: {
-                publicAddress: currentAccount
+                publicAddressAgent: currentAccount
             }
         });
         setPolicies(response.data.policies.sort((a, b) => new Date(a.startDate) - new Date(b.startDate)));
@@ -126,7 +126,7 @@ const AgentPolicy = () => {
             </Col>
             {policies && currentPolicies.map((policy) => (
               <Col lg="3" md="4" sm="6" className="mb-4" key={policy._id}>
-                <PolicyCardAgent key={policy._id} {...policy} />
+                <SellPolicyCard key={policy._id} {...policy} />
               </Col>
             ))}
           </Row>
