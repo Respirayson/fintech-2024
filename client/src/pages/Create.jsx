@@ -38,6 +38,7 @@ const Create = () => {
     maturityDate: "-",
     description: "-",
     timeCreated: "-",
+    type: 1
   });
 
   useEffect(() => {
@@ -56,12 +57,12 @@ const Create = () => {
         formData
       );
       console.log(response.data);
-      const tokenId = await mintNewPolicyToken(1, 1234, 1234, "asdf", 1234);
+      // const tokenId = await mintNewPolicyToken(1, 1234, 1234, "asdf", 1234);
       setShowAlert(true);
       setAlertIcon("success");
       setAlertTitle("Congratulations");
       setAlertMessage(response.data.message);
-      console.log(`Minted new policy token - token id: ${tokenId}`);
+      // console.log(`Minted new policy token - token id: ${tokenId}`);
       setTimeout(() => {
         navigate("/");
       }, 10000);

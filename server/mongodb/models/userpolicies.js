@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 
-const PolicySchema = new mongoose.Schema({
+const UserPolicySchema = new mongoose.Schema({
+    tokenId: {
+        type: Number,
+        required: true
+    },
     publicAddress: {
         type: String,
         required: true
@@ -41,14 +45,9 @@ const PolicySchema = new mongoose.Schema({
     type : {
         type: Number,
         required: true
-    },
-    listed: {
-        type: Boolean,
-        required: true,
-        default: true
     }
 });
 
-const Policy = mongoose.model('Policy', PolicySchema);
+const UserPolicy = mongoose.model('UserPolicy', UserPolicySchema);
 
-export default Policy;
+export default UserPolicy;

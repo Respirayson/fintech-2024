@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import CommonSection from "../components/ui/Common-section/CommonSection";
 import { Container, Row, Col } from "reactstrap";
@@ -8,8 +8,9 @@ import "../styles/market.css";
 import axios from 'axios';
 import PolicyCard from "../components/ui/PolicyCard/PolicyCard";
 import { changeNetwork } from "../utils/connect";
+import { WebContext } from "../context/WebContext";
 
-const Market = () => {
+const UserPolicy = () => {
   const [policies, setPolicies] = useState([]);
   const [displayedPolicies, setDisplayedPolicies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,22 +23,27 @@ const Market = () => {
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+  const { currentAccount } = useContext(WebContext);
+
 
   useEffect(() => {
     // Fetch policies when the component mounts
     const fetchPolicies = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/listed-policy');
-        console.log(response.data)
-        setPolicies(response.data.sort((a, b) => new Date(a.startDate) - new Date(b.startDate)));
-        setDisplayedPolicies(response.data.sort((a, b) => new Date(a.startDate) - new Date(b.startDate)));
-        console.log(policies)
+        const response = await axios.get('http://localhost:8000/user-policy', {
+            params: {
+                publicAddress: currentAccount
+            }
+        });
+        setPolicies(response.data.policies.sort((a, b) => new Date(a.startDate) - new Date(b.startDate)));
+        setDisplayedPolicies(response.data.policies.sort((a, b) => new Date(a.startDate) - new Date(b.startDate)));
       } catch (error) {
         console.error('Error fetching policies:', error);
       }
-    };
+    }; 
     fetchPolicies();
   }, []);
+
 
   const handleSort = (e) => {
     const sortType = e.target.value;
@@ -76,7 +82,7 @@ const Market = () => {
 
   return (
     <>
-      <CommonSection title={"MarketPlace"} />
+      <CommonSection title={"Created Policies"} />
       <button onClick={async () => await changeNetwork("0x13881")}>Change network</button>
 
       <section>
@@ -140,8 +146,8 @@ const Market = () => {
         </ul>
       </nav>
           
-    </>
+    </> 
   );
 };
 
-export default Market;
+export default UserPolicy;

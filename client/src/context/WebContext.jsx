@@ -28,6 +28,7 @@ export function WebProvider({ children }) {
   const [ethBalance, setEthBalance] = useState("");
 
   const [authenticated, setAuthenticated] = useState(false);
+  const [accountType, setAccountType] = useState("");
 
   /**
    * Checks if the user is authenticated by verifying the token with the server.
@@ -82,7 +83,7 @@ export function WebProvider({ children }) {
    * Returns the correct token symbol based on the chain ID
    */
   const getCorrectTokenSymbol = (chainID) => {
-    console.log(chainID);
+    console.log(`Chain ID : ${chainID}`);
     if (chainID == 0xaa36a7) {
       return "ETH";
     } else if (chainID == 0x13881) {
@@ -114,7 +115,7 @@ export function WebProvider({ children }) {
         const balance = await provider.getBalance(accounts[0]);
         setEthBalance(parseFloat(ethers.formatEther(balance)).toFixed(3) + " " + getCorrectTokenSymbol(ethereum.chainId));
         setCurrentAccount(account);
-        console.log(account);
+        console.log(`Public Address : ${account}`);
       } else {
         // No account connected
       }
@@ -128,6 +129,33 @@ export function WebProvider({ children }) {
     checkIfWalletIsConnected();
     window?.ethereum?.on("chainChanged", checkIfWalletIsConnected);
   }, []);
+
+  // Get account type
+  useEffect(() => {
+    async function fetchAccountType() {
+      const response = await axios.get(
+        "http://localhost:8000/agent",
+         {
+          params: {
+            publicAddress: currentAccount
+          }
+        }
+      );
+      console.log(currentAccount)
+      console.log(response.data)
+      if (response.data.message === "VALID") {
+        console.log("Account Type : Agent")
+        setAccountType("Agent");
+      } else if (response.data.message === "INVALID") {
+        console.log("Account Type : General");
+        setAccountType("General");
+      } else {
+        setAccountType("Error");
+        console.log("Error");
+      }
+    }
+    fetchAccountType();
+  }, [currentAccount])
 
   /**
    * Close the alert after a specified time interval
@@ -189,6 +217,7 @@ export function WebProvider({ children }) {
         setSuccess,
         currentAccount,
         ethBalance,
+        accountType,
         checkAuthenticated,
         handleLogin,
         handleLogout,

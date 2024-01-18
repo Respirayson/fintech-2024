@@ -5,7 +5,26 @@ import { WebContext } from "../../context/WebContext";
 import { NavLink, Link } from "react-router-dom";
 import { checkWalletConnected } from "../../utils/connect";
 
-const NAV__LINKS = [
+const NAV__LINKS__GENERAL = [
+  {
+    display: "Home",
+    url: "/home",
+  },
+  {
+    display: "Market",
+    url: "/market",
+  },
+  {
+    display: "Contact",
+    url: "/contact",
+  },
+  {
+    display: "My Policies",
+    url: "/user-policy"
+  }
+];
+
+const NAV__LINKS__AGENT = [
   {
     display: "Home",
     url: "/home",
@@ -22,6 +41,25 @@ const NAV__LINKS = [
     display: "Contact",
     url: "/contact",
   },
+  {
+    display: "My Policies",
+    url: "/agent-policy"
+  }
+];
+
+const NAV__LINKS = [
+  {
+    display: "Home",
+    url: "/home",
+  },
+  {
+    display: "Market",
+    url: "/market",
+  },
+  {
+    display: "Contact",
+    url: "/contact",
+  }
 ];
 
 const Header = () => {
@@ -29,7 +67,7 @@ const Header = () => {
   const [currentAccount, setCurrentAccount] = useState(""); // Connected wallet public address
   const [authenticated, setAuthenticated] = useState(false);
 
-  const { ethBalance, checkAuthenticated, handleLogout } =
+  const { ethBalance, checkAuthenticated, handleLogout, accountType } =
     useContext(WebContext);
   const menuRef = useRef(null);
 
@@ -106,18 +144,47 @@ const Header = () => {
 
           <div className="nav__menu" ref={menuRef} onClick={toggleMenu}>
             <ul className="nav__list">
-              {NAV__LINKS.map((item, index) => (
-                <li className="nav__item" key={index}>
-                  <NavLink
-                    to={item.url}
-                    className={(navClass) =>
-                      navClass.isActive ? "active" : ""
-                    }
-                  >
-                    {item.display}
-                  </NavLink>
-                </li>
-              ))}
+              {authenticated === false ? (
+                NAV__LINKS.map((item, index) => (
+                  <li className="nav__item" key={index}>
+                    <NavLink
+                      to={item.url}
+                      className={(navClass) =>
+                        navClass.isActive ? "active" : ""
+                      }
+                    >
+                      {item.display}
+                    </NavLink>
+                  </li>
+                ))
+              ) : accountType === "General" ? (
+                NAV__LINKS__GENERAL.map((item, index) => (
+                  <li className="nav__item" key={index}>
+                    <NavLink
+                      to={item.url}
+                      className={(navClass) =>
+                        navClass.isActive ? "active" : ""
+                      }
+                    >
+                      {item.display}
+                    </NavLink>
+                  </li>
+                ))
+              ) : (
+                NAV__LINKS__AGENT.map((item, index) => (
+                  <li className="nav__item" key={index}>
+                    <NavLink
+                      to={item.url}
+                      className={(navClass) =>
+                        navClass.isActive ? "active" : ""
+                      }
+                    >
+                      {item.display}
+                    </NavLink>
+                  </li>
+                ))
+              )
+              }
               {authenticated && (
                 <li className="nav__item">
                   <NavLink

@@ -9,6 +9,8 @@ import Contact from "../pages/Contact";
 
 import Wallet from "../pages/Wallet";
 import NftDetails from "../pages/NftDetails";
+import AgentPolicy from "../pages/AgentPolicies";
+import UserPolicy from "../../../server/mongodb/models/userpolicies";
 
 const Routers = () => {
   return (
@@ -20,6 +22,8 @@ const Routers = () => {
       <Route path="/contact" element={<Contact />} />
       <Route path="/wallet" element={<Wallet />} />
       <Route path="/market/:id" element={<NftDetails />} />
+      <Route path="/user-policy" element={<UserPolicy />} />
+      <Route path="/agent-policy" element={<AgentPolicy />} />
     </Routes>
   );
 };

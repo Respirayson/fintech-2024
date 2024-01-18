@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const PolicySchema = new mongoose.Schema({
+const ListedPolicySchema = new mongoose.Schema({
     publicAddress: {
         type: String,
         required: true
@@ -49,6 +49,6 @@ const PolicySchema = new mongoose.Schema({
     }
 });
 
-const Policy = mongoose.model('Policy', PolicySchema);
+const ListedPolicy = mongoose.model('ListedPolicy', ListedPolicySchema);
 
-export default Policy;
+export default ListedPolicy;
