@@ -1,6 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { SourceBridgeContext } from "../../../context/SourceBridgeContext";
-import { WebContext } from "../../../context/WebContext"
+import { WebContext } from "../../../context/WebContext";
+import axios from "axios";
 import "./modal.css";
 
 const SellModal = ({
@@ -26,7 +27,7 @@ const SellModal = ({
     setAlertMessage,
   } = useContext(WebContext);
 
-  const handleSubmit = async (tokenId) => {
+  const handleSubmit = async (token) => {
     // await bridgeToken(tokenId);
     try {
       const response = await axios.post(
@@ -46,13 +47,12 @@ const SellModal = ({
         }
       );
       console.log(response.data);
-      setListed(true);
       setShowAlert(true);
       setAlertIcon("success");
       setAlertTitle("Congratulations");
       setAlertMessage(response.data.message);
       setTimeout(() => {
-        navigate('/user-policy')
+        window.location.reload();
       }, 10000);
     } catch (err) {
       setShowAlert(true);

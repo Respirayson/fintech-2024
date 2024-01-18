@@ -83,7 +83,7 @@ export function WebProvider({ children }) {
    */
   const getCorrectTokenSymbol = (chainID) => {
     console.log(`Chain ID : ${chainID}`);
-    if (chainID == 0xaa36a7) {
+    if (chainID == 0x1) {
       return "ETH";
     } else if (chainID == 0x13881) {
       return "MATIC";

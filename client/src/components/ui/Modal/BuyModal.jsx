@@ -63,7 +63,7 @@ const BuyModal = ({
       setAlertTitle("Congratulations");
       setAlertMessage(response.data.message);
       setTimeout(() => {
-        navigate('/user-policy')
+        navigate('/user-policy');
       }, 10000);
     } catch (err) {
       setShowAlert(true);
@@ -77,6 +77,7 @@ const BuyModal = ({
     <div className="modal__wrapper">
       <div className="single__modal">
         <span className="close__modal">
+          <i className="ri-close-line" onClick={() => setShowModal(false)}></i>
         </span>
         <h6 className="text-center text-light">Place a Bid</h6>
         <p className="text-center text-light">

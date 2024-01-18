@@ -53,19 +53,20 @@ const SellPolicyCard = ({
     try {
       console.log("DELIST")
       const response = await axios.delete('http://localhost:8000/listed-policy', {
-        tokenId: 1,
-        policyId: policyId,
-        publicAddressOwner: publicAddressPreviousOwner,
-        publicAddressAgent: publicAddressAgent,
-        issuerName: issuerName,
-        policyName: policyName,
-        policyType: policyType,
-        premium: premium,
-        startDate: startDate,
-        maturityDate: maturityDate,
-        description: description,
-        timeCreated: timeCreated,
-        type: type
+        params: {
+          policyId: policyId,
+          publicAddressOwner: publicAddressOwner,
+          publicAddressAgent: publicAddressAgent,
+          issuerName: issuerName,
+          policyName: policyName,
+          policyType: policyType,
+          premium: premium,
+          startDate: startDate,
+          maturityDate: maturityDate,
+          description: description,
+          timeCreated: timeCreated,
+          type: type
+        }
       });
       console.log(response);
       if (response.status === 200) {
@@ -86,7 +87,7 @@ const SellPolicyCard = ({
       setShowAlert(true);
       setAlertIcon("error");
       setAlertTitle("Error");
-      setAlertMessage(err.message);
+      setAlertMessage(error.message);
     }
   }
 
@@ -132,7 +133,7 @@ const SellPolicyCard = ({
           {listed ? (
             <button
               className="bid__btn d-flex align-items-center gap-1"
-              onClick={() => {handleDelist}}
+              onClick={handleDelist}
             >
               <i className="ri-shopping-bag-line" />
               Delist Policy

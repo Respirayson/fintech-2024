@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const PolicySchema = new mongoose.Schema({
     policyId: {
         type: String,
-        required: false
+        required: false,
+        default: ""
     },
     publicAddressOwner: {
         type: String,
@@ -53,7 +54,7 @@ const PolicySchema = new mongoose.Schema({
     listed: {
         type: Boolean,
         required: true,
-        default: true
+        default: false
     }
 });
 

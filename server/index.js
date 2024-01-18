@@ -138,9 +138,9 @@ app.get('/policy', async (req, res) => {
 app.post('/policy', async (req, res) => {
   try {
     console.log(req.body);
-    const { publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description, type } = req.body;
+    const { publicAddressOwner, publicAddressAgent, policyName, issuerName, policyType, premium, startDate, maturityDate, description, type } = req.body;
     const timeCreated = new Date(Date.now());
-    const newPolicy = new Policy({ publicAddress, publicAddress, issuerName, policyName, policyType, premium, startDate, maturityDate, description, timeCreated, type });
+    const newPolicy = new Policy({ publicAddressOwner, publicAddressAgent, policyName, issuerName, policyType, premium, startDate, maturityDate, description, timeCreated, type });
     const savedPolicy = await newPolicy.save();
     const policyId = savedPolicy._id;
     await Policy.updateOne({ _id: savedPolicy._id }, { policyId });
@@ -158,12 +158,14 @@ app.post('/policy', async (req, res) => {
 // DELETE policy (NOT FOR USE)
 app.delete('/policy', async (req, res) => {
   try {
-    const policy = await Policy.findOne(req.body);
+    const policyConditions = req.body;
+    console.log(req.body)
+    const policy = await Policy.findOne(policyConditions);
     if (!policy) {
       return res.status(404).json({ message: 'Policy not found' });
     }
-    await Policy.deleteOne({ policy });
-    res.status(200).json({ message: 'Policy deleted successfully', policy});
+    await Policy.deleteOne(policyConditions);
+    res.status(200).json({ message: 'Policy deleted successfully', policy });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
@@ -220,6 +222,15 @@ app.post('/listed-policy', async (req, res) => {
     });
     await newListedPolicy.save()
     const insertedPolicy = await ListedPolicy.findById(newListedPolicy._id);
+    if (type === 1) {
+      const agentPolicy = await Policy.findById(policyId);
+      agentPolicy.listed = true;
+      await agentPolicy.save();
+    } else {
+      const userPolicy = await UserPolicy.findById(policyId);
+      userPolicy.listed = true;
+      await userPolicy.save();
+    }
     res.status(200).json({
       message: "Successfully listed policy",
       policy: insertedPolicy.toJSON()
@@ -233,23 +244,35 @@ app.post('/listed-policy', async (req, res) => {
 // DELETE listed policy (User Sell / Agent Delist)
 app.delete('/listed-policy', async (req, res) => {
   try {
-    const policy = await ListedPolicy.findOne(req.body);
-    if (!policy) {
+    console.log(req.query);
+    const listedPolicy = await ListedPolicy.find(req.query);
+    if (!listedPolicy) {
       return res.status(404).json({ message: 'Listed Policy not found' });
     }
-    await ListedPolicy.deleteOne({ policy });
-    res.status(200).json({ message: 'Delisted policy successfully', policy});
+    await ListedPolicy.deleteOne({ listedPolicy });
+    if (req.query.type === '1') {
+      const agentPolicy = await Policy.findOne(req.query);
+      console.log(agentPolicy);
+      agentPolicy.listed = false;
+      await agentPolicy.save();
+    } else {
+      const userPolicy = await UserPolicy.find(req.query);
+      userPolicy.listed = false;
+      await userPolicy.save();
+    }
+    res.status(200).json({ message: 'Delisted policy successfully', listedPolicy});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
-// UPDATE listed policy status (Agent List/Delist)
-app.patch('/listed-policy', async (req, res) => {
+
+// UPDATE listed policy status (Agent List/Delist) DEPRECATED
+app.patch('/policy', async (req, res) => {
   try {
     const { _id, listed } = req.body;
-    const updatedPolicy = await ListedPolicy.findByIdAndUpdate(_id, { listed }, { new: true });
+    const updatedPolicy = await Policy.findByIdAndUpdate(_id, { listed }, { new: true });
     if (updatedPolicy) {
       return res.status(200).json({
         message: 'Policy updated successfully',
@@ -275,6 +298,27 @@ app.get('/user-policy', async (req, res) => {
   try {
     const { publicAddress } = req.query;
     const userPolicies = await UserPolicy.find({ publicAddress });
+    if (userPolicies.length > 0) {
+      return res.status(200).json({
+        message: "User policies found",
+        policies: userPolicies
+      });
+    } else {
+      return res.status(200).json({
+        message: "No policies found for user",
+        polciies: userPolicies
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+})
+
+// GET all user's policies (FOR TESTING)
+app.get('/get-user-policy', async (req, res) => {
+  try {
+    const userPolicies = await UserPolicy.find();
     if (userPolicies.length > 0) {
       return res.status(200).json({
         message: "User policies found",
@@ -380,6 +424,8 @@ app.get('/agent-policy', async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 })
+
+app.put
 
 export const startServer = async () => {
   try {

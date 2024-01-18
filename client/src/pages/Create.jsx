@@ -50,7 +50,8 @@ const Create = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      formData.publicAddress = currentAccount;
+      formData.publicAddressOwner = currentAccount;
+      formData.publicAddressAgent = currentAccount;
       const response = await axios.post(
         "http://localhost:8000/policy",
         formData
