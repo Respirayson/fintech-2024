@@ -10,7 +10,7 @@ import Contact from "../pages/Contact";
 import Wallet from "../pages/Wallet";
 import NftDetails from "../pages/NftDetails";
 import AgentPolicy from "../pages/AgentPolicies";
-import UserPolicy from "../../../server/mongodb/models/userpolicies";
+import UserPolicy from "../pages/UserPolicies";
 
 const Routers = () => {
   return (

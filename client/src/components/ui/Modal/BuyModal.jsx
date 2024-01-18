@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { WebContext } from "../../../context/WebContext";
 import "./modal.css";
+import axios from "axios";
 
 const BuyModal = ({
   setShowModal,
@@ -85,9 +86,9 @@ const BuyModal = ({
           <h6>Seller Address</h6>
             <input
               type="text"
-              id="publicAddress"
-              name="publicAddress"
-              value={publicAddress}
+              id="publicAddressOwner"
+              name="publicAddressOwner"
+              value={publicAddressOwner}
               readOnly
             />
         </div>

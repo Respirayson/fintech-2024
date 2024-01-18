@@ -39,7 +39,7 @@ const UserPolicy = () => {
       }
     }; 
     fetchPolicies();
-  }, []);
+  }, [currentAccount]);
 
   const handleSort = (e) => {
     const sortType = e.target.value;
