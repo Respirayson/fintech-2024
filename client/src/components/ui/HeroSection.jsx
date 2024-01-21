@@ -2,8 +2,8 @@ import React from "react";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./herosection.css";
+import heroImg from "../../assets/images/hero.jpg";
 
-import heroImg from "../../assets/images/hero.jpg"
 const HeroSection = () => {
   return (
     <section className="hero__section">

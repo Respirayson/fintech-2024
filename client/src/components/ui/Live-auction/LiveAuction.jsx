@@ -1,28 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
-
-import NftCard from "../PolicyCard/PolicyPreview.jsx";
-import { NFT__DATA } from "../../../assets/data/data.js";
-
 import "./live-auction.css";
 import axios from "axios";
-import PolicyCard from "../PolicyCard/PolicyCard.jsx";
+import BuyPolicyCard from "../PolicyCard/BuyPolicyCard.jsx";
 
 const LiveAuction = () => {
   const [policies, setPolicies] = useState([]);
 
+  // Fetch 8 latest policies listed on component mount
   useEffect(() => {
-    // Fetch policies when the component mounts
     const fetchPolicies = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/policy');
-        setPolicies(response.data);
+        const response = await axios.get('http://localhost:8000/listed-policy');
+        const sortedResponse = response.data.sort((a, b) => {
+          b.timeCreated - a.timeCreated;
+        });
+        if (sortedResponse.length > 8) {
+          setPolicies(sortedResponse.slice(1,9));
+        } else {
+          setPolicies(sortedResponse);
+        }
       } catch (error) {
         console.error('Error fetching policies:', error);
       }
     };
-
     fetchPolicies();
   }, []);
 
@@ -40,10 +42,9 @@ const LiveAuction = () => {
               </span>
             </div>
           </Col>
-
           {policies && policies.map((policy) => (
               <Col lg="3" md="4" sm="6" className="mb-4" key={policy._id}>
-                <PolicyCard key={policy._id} {...policy} />
+                <BuyPolicyCard key={policy._id} {...policy} />
               </Col>
           ))}
         </Row>

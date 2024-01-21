@@ -5,7 +5,26 @@ import { WebContext } from "../../context/WebContext";
 import { NavLink, Link } from "react-router-dom";
 import { checkWalletConnected } from "../../utils/connect";
 
-const NAV__LINKS = [
+const NAV__LINKS__GENERAL = [
+  {
+    display: "Home",
+    url: "/home",
+  },
+  {
+    display: "Market",
+    url: "/market",
+  },
+  {
+    display: "My Policies",
+    url: "/user-policy",
+  },
+  {
+    display: "Contact",
+    url: "/contact",
+  }
+];
+
+const NAV__LINKS__AGENT = [
   {
     display: "Home",
     url: "/home",
@@ -19,16 +38,35 @@ const NAV__LINKS = [
     url: "/create",
   },
   {
+    display: "My Policies",
+    url: "/agent-policy"
+  },
+  {
     display: "Contact",
     url: "/contact",
-  },
+  }
 ];
 
-const Header = ({ checkAuthenticated, handleLogout }) => {
+const NAV__LINKS = [
+  {
+    display: "Home",
+    url: "/home",
+  },
+  {
+    display: "Market",
+    url: "/market",
+  },
+  {
+    display: "Contact",
+    url: "/contact",
+  }
+];
+
+const Header = () => {
   const headerRef = useRef(null);
   const [currentAccount, setCurrentAccount] = useState(""); // Connected wallet public address
-
-  const { ethBalance } = useContext(WebContext);
+  const [authenticated, setAuthenticated] = useState(false);
+  const { ethBalance, checkAuthenticated, handleLogout, accountType } = useContext(WebContext);
   const menuRef = useRef(null);
 
   //   useEffect(() => {
@@ -69,6 +107,13 @@ const Header = ({ checkAuthenticated, handleLogout }) => {
   }, []);
 
   useEffect(() => {
+    checkAuthenticated().then((isAuthenticated) => {
+      setAuthenticated(isAuthenticated);
+    });
+    console.log(`Authenticated Status : ${authenticated}`);
+  }, [checkAuthenticated]);
+
+  useEffect(() => {
     /**
      * Fetches the connected wallet account on component mount.
      */
@@ -97,50 +142,87 @@ const Header = ({ checkAuthenticated, handleLogout }) => {
 
           <div className="nav__menu" ref={menuRef} onClick={toggleMenu}>
             <ul className="nav__list">
-              {NAV__LINKS.map((item, index) => (
-                <li className="nav__item" key={index}>
-                  <NavLink
-                    to={item.url}
-                    className={(navClass) =>
-                      navClass.isActive ? "active" : ""
-                    }
-                  >
-                    {item.display}
-                  </NavLink>
-                </li>
-              ))}
-              {checkAuthenticated() && 
+              {authenticated === false ? (
+                NAV__LINKS.map((item, index) => (
+                  <li className="nav__item" key={index}>
+                    <NavLink
+                      to={item.url}
+                      className={(navClass) =>
+                        navClass.isActive ? "active" : ""
+                      }
+                    >
+                      {item.display}
+                    </NavLink>
+                  </li>
+                ))
+              ) : accountType === "General" ? (
+                NAV__LINKS__GENERAL.map((item, index) => (
+                  <li className="nav__item" key={index}>
+                    <NavLink
+                      to={item.url}
+                      className={(navClass) =>
+                        navClass.isActive ? "active" : ""
+                      }
+                    >
+                      {item.display}
+                    </NavLink>
+                  </li>
+                ))
+              ) : (
+                NAV__LINKS__AGENT.map((item, index) => (
+                  <li className="nav__item" key={index}>
+                    <NavLink
+                      to={item.url}
+                      className={(navClass) =>
+                        navClass.isActive ? "active" : ""
+                      }
+                    >
+                      {item.display}
+                    </NavLink>
+                  </li>
+                ))
+              )
+              }
+              {authenticated && (
                 <li className="nav__item">
                   <NavLink
-                    to="/"
+                    to="#"
                     className={(navClass) =>
                       navClass.isActive ? "active" : ""
                     }
                   >
-                    {ethBalance} ETH
+                    {ethBalance}
                   </NavLink>
-                </li>}
+                </li>
+              )}
             </ul>
           </div>
 
           <div className="nav__right d-flex align-items-center gap-3 ">
-            {checkAuthenticated() ? (
+            {authenticated ? (
               <div className="row">
-                
                 <div className="col">
                   <button className="btn d-flex gap-2 align-items-center">
                     <span>
                       <i className="ri-logout-box-line"></i>
                     </span>
-                    <Link style={{ whiteSpace: 'nowrap' }} onClick={handleLogout}>Sign Out</Link>
+                    <Link
+                      to="/"
+                      style={{ whiteSpace: "nowrap" }}
+                      onClick={() => {
+                        handleLogout();
+                      }}
+                    >
+                      Sign Out
+                    </Link>
                   </button>
                 </div>
               </div>
-              ) : (
+            ) : (
               <button className="btn d-flex gap-2 align-items-center">
-              <span>
-                <i className="ri-wallet-line"></i>
-              </span>
+                <span>
+                  <i className="ri-wallet-line"></i>
+                </span>
                 <Link to="/wallet">Connect Wallet</Link>
               </button>
             )}
